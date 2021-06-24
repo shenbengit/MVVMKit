@@ -1,0 +1,59 @@
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+
+ext {
+    android = [
+            'compileSdkVersion': 30,
+            'buildToolsVersion': '30.0.3',
+            'minSdkVersion'    : 19,
+            'targetSdkVersion' : 30
+    ]
+
+    versions = [
+            'lifecycle_version'    : '2.2.0',
+            'retrofit_version'     : '2.6.4',
+            'okhttp3_version'      : '3.12.13',
+            'moshi_version'        : '1.11.0',
+            'koin_version'         : '3.1.1',
+            'coil_version'         : '1.2.2',
+            'coroutines_version'   : '1.5.0',
+            'mmkv_version'         : '1.2.9',
+            'fragmentation_version': '1.8.3',
+            'leakcanary_version'   : '2.7',
+            'autosize_version'     : '1.2.1',
+    ]
+
+    deps = [
+            'lifecycle'    : [
+                    'lifecycle_extensions'   : "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle_version}",
+                    'lifecycle_viewmodel_ktx': "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle_version}",
+                    'lifecycle_common_java8' : "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle_version}"
+            ],
+            'http'         : [
+                    'retrofit'                   : "com.squareup.retrofit2:retrofit:${versions.retrofit_version}",
+                    'converter_moshi'            : "com.squareup.retrofit2:converter-moshi:${versions.retrofit_version}",
+                    'converter_simplexml'        : "com.squareup.retrofit2:converter-simplexml:${versions.retrofit_version}",
+                    'okhttp3'                    : "com.squareup.okhttp3:okhttp:${versions.okhttp3_version}",
+                    'okhttp3_logging_interceptor': "com.squareup.okhttp3:logging-interceptor:${versions.okhttp3_version}",
+                    'moshi_kotlin'               : "com.squareup.moshi:moshi-kotlin:${versions.moshi_version}"
+            ],
+
+            'koin'         : "io.insert-koin:koin-android:${versions.koin_version}",
+            'coil'         : "io.coil-kt:coil:${versions.coil_version}",
+            'coroutines'   : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines_version}",
+            'mmkv'         : "com.tencent:mmkv-static:${versions.mmkv_version}",
+            'fragmentation': "com.github.weikaiyun.SFragmentation:fragmentation:${versions.fragmentation_version}",
+
+            'leakcanary'   : "com.squareup.leakcanary:leakcanary-android:${versions.leakcanary_version}",
+            'autosize'     : "me.jessyan:autosize:${versions.autosize_version}",
+
+            'xlog'         : 'com.elvishew:xlog:1.9.0',
+            'toasty'       : 'com.github.GrenderG:Toasty:1.5.0',
+            'loadingDialog': 'com.github.shenbengit:LoadingDialog:1.0.5',
+
+            'xcrash'       : 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0',
+    ]
+}

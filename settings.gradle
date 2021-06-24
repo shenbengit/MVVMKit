@@ -1,0 +1,3 @@
+rootProject.name = "MVVMKit"
+include ':app'
+include ':lib'

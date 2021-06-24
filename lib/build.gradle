@@ -1,0 +1,58 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles "proguard-rules.pro"
+    }
+
+    compileOptions {
+        kotlinOptions.freeCompilerArgs += ['-module-name', "com.github.shenbengit.MVVMKit"]
+    }
+
+    buildFeatures {
+        dataBinding = true
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    def lifecycle = rootProject.ext.deps.lifecycle
+    api lifecycle.lifecycle_extensions
+    api lifecycle.lifecycle_viewmodel_ktx
+    api lifecycle.lifecycle_common_java8
+
+    def http = rootProject.ext.deps.http
+    api http.retrofit
+    api http.converter_moshi
+    api http.okhttp3
+    api http.okhttp3_logging_interceptor
+    api http.moshi_kotlin
+
+    api rootProject.ext.deps.koin
+    api rootProject.ext.deps.coil
+    api rootProject.ext.deps.coroutines
+
+    api rootProject.ext.deps.mmkv
+    api rootProject.ext.deps.fragmentation
+    api rootProject.ext.deps.xlog
+    api rootProject.ext.deps.toasty
+    api rootProject.ext.deps.loadingDialog
+
+    compileOnly 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    compileOnly 'androidx.recyclerview:recyclerview:1.2.0'
+
+}
