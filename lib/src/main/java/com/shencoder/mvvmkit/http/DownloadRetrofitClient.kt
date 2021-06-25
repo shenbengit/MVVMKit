@@ -4,6 +4,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
 /**
+ * 单例模式
+ * Singleton
+ * [DownloadFile]
  *
  * @author  ShenBen
  * @date    2021/6/10 10:02
