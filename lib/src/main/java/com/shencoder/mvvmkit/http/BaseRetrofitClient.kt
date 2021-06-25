@@ -4,6 +4,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
 /**
+ * 自定义类并继承此类，设计成单例模式
+ *
  * @author ShenBen
  * @date 2019/8/21 9:21
  * @email 714081644@qq.com

@@ -13,14 +13,14 @@ abstract class BaseResponse<T> {
     abstract fun isSuccess(): Boolean
 
     /**
-     * 状态码
+     * 返回状态码
      */
-    abstract fun getCode(): Int
+    abstract fun getResponseCode(): Int
 
     /**
-     * 说明
+     * 返回说明
      */
-    abstract fun getMsg(): String
+    abstract fun getResponseMsg(): String
 
     /**
      * 数据

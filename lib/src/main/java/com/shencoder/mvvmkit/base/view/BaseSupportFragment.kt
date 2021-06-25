@@ -47,11 +47,20 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
         mBinding.unbind()
     }
 
+    /**
+     * 布局id
+     */
     protected abstract fun getLayoutId(): Int
 
+    /**
+     * 注入ViewModel
+     */
     protected abstract fun injectViewModel(): Lazy<VM>
 
-    protected abstract fun getVariableId(): Int
+    /**
+     * 布局文件中ViewModel的id
+     */
+    protected abstract fun getViewModelId(): Int
 
     protected abstract fun initView()
 
@@ -59,7 +68,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     private fun init() {
         mViewModel = injectViewModel().value
-        mBinding.setVariable(getVariableId(), mViewModel)
+        mBinding.setVariable(getViewModelId(), mViewModel)
         lifecycle.addObserver(mViewModel)
         mBinding.lifecycleOwner = this
         //注意：子类不可再重新执行此方法，已防止崩溃，具体的回调请看[baseLiveDataObserver(String)]

@@ -54,7 +54,7 @@ fun <T> BaseViewModel<*>.httpRequest(
             if (it.isSuccess()) {
                 onSuccess(ResultStatus.onSuccess(it.getResponseData()))
             } else {
-                onFailure(ResultStatus.onFailure(it.getCode(), it.getMsg()))
+                onFailure(ResultStatus.onFailure(it.getResponseCode(), it.getResponseMsg()))
             }
         }.onFailure {
             if (isShowLoadingDialog) {

@@ -6,14 +6,8 @@ package com.shencoder.mvvmkit.base.repository
  * @date    2021/03/16 17:25
  * @email   714081644@qq.com
  */
-interface IRepository {
+interface IRepository
 
-}
+interface IRemoteDataSource
 
-interface IRemoteDataSource {
-
-}
-
-interface ILocalDataSource {
-
-}
+interface ILocalDataSource
