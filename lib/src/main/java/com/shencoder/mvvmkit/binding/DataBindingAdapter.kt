@@ -1,14 +1,15 @@
 package com.shencoder.mvvmkit.binding
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.*
 import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import coil.load
 import coil.loadAny
 import coil.transform.BlurTransformation
 import coil.transform.GrayscaleTransformation
@@ -125,4 +126,63 @@ fun View.setViewBackgroundResource(@DrawableRes resId: Int) {
 @BindingAdapter(value = ["setRefreshingStatus"])
 fun SwipeRefreshLayout.setRefreshingStatus(isRefreshing: Boolean) {
     this.isRefreshing = isRefreshing
+}
+
+
+@BindingAdapter(value = ["app:drawableStartCompat"])
+fun TextView.setDrawableStartCompat(@DrawableRes drawableId: Int) {
+    setDrawableStartCompat(getDrawable(context, drawableId))
+}
+
+@BindingAdapter(value = ["app:drawableStartCompat"])
+fun TextView.setDrawableStartCompat(drawable: Drawable?) {
+    setIntrinsicBounds(drawable)
+    val drawables: Array<Drawable> = compoundDrawablesRelative
+    setCompoundDrawablesRelative(drawable, drawables[1], drawables[2], drawables[3])
+}
+
+@BindingAdapter(value = ["app:drawableTopCompat"])
+fun TextView.setDrawableTopCompat(@DrawableRes drawableId: Int) {
+    setDrawableTopCompat(getDrawable(context, drawableId))
+}
+
+@BindingAdapter(value = ["app:drawableTopCompat"])
+fun TextView.setDrawableTopCompat(drawable: Drawable?) {
+    setIntrinsicBounds(drawable)
+    val drawables: Array<Drawable> = compoundDrawables
+    setCompoundDrawables(drawables[0], drawable, drawables[2], drawables[3])
+}
+
+@BindingAdapter(value = ["app:drawableEndCompat"])
+fun TextView.setDrawableEndCompat(@DrawableRes drawableId: Int) {
+    setDrawableEndCompat(getDrawable(context, drawableId))
+}
+
+@BindingAdapter(value = ["app:drawableEndCompat"])
+fun TextView.setDrawableEndCompat(drawable: Drawable?) {
+    setIntrinsicBounds(drawable)
+    val drawables: Array<Drawable> = compoundDrawablesRelative
+    setCompoundDrawablesRelative(drawables[0], drawables[1], drawable, drawables[3])
+}
+
+@BindingAdapter(value = ["app:drawableBottomCompat"])
+fun TextView.setDrawableBottomCompat(@DrawableRes drawableId: Int) {
+    setDrawableBottomCompat(getDrawable(context, drawableId))
+}
+
+@BindingAdapter(value = ["app:drawableBottomCompat"])
+fun TextView.setDrawableBottomCompat(drawable: Drawable?) {
+    setIntrinsicBounds(drawable)
+    val drawables: Array<Drawable> = compoundDrawables
+    setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawable)
+}
+
+private fun getDrawable(context: Context, @DrawableRes drawableId: Int) = if (drawableId != 0) {
+    ContextCompat.getDrawable(context, drawableId)
+} else {
+    null
+}
+
+private fun setIntrinsicBounds(drawable: Drawable?) {
+    drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
 }
