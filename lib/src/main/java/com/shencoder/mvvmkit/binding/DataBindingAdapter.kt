@@ -38,7 +38,7 @@ import coil.transform.Transformation
     value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale"],
     requireAll = false
 )
-fun ImageView.setImageUrl(
+fun ImageView.setImageData(
     data: Any?,
     placeholderImageRes: Drawable? = null,
     errorImageRes: Drawable? = null,
