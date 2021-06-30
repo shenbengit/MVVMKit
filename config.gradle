@@ -13,7 +13,7 @@ ext {
     ]
 
     versions = [
-            'lifecycle_version'    : '2.2.0',
+            'lifecycle_version'    : '2.3.1',
             'retrofit_version'     : '2.6.4',
             'okhttp3_version'      : '3.12.13',
             'moshi_version'        : '1.12.0',
@@ -28,7 +28,6 @@ ext {
 
     deps = [
             'lifecycle'    : [
-                    'lifecycle_extensions'   : "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle_version}",
                     'lifecycle_viewmodel_ktx': "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle_version}",
                     'lifecycle_common_java8' : "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle_version}"
             ],
