@@ -129,48 +129,48 @@ fun SwipeRefreshLayout.setRefreshingStatus(isRefreshing: Boolean) {
 }
 
 
-@BindingAdapter(value = ["app:drawableStartCompat"])
+@BindingAdapter(value = ["setDrawableStartCompat"])
 fun TextView.setDrawableStartCompat(@DrawableRes drawableId: Int) {
     setDrawableStartCompat(getDrawable(context, drawableId))
 }
 
-@BindingAdapter(value = ["app:drawableStartCompat"])
+@BindingAdapter(value = ["setDrawableStartCompat"])
 fun TextView.setDrawableStartCompat(drawable: Drawable?) {
     setIntrinsicBounds(drawable)
     val drawables: Array<Drawable> = compoundDrawablesRelative
     setCompoundDrawablesRelative(drawable, drawables[1], drawables[2], drawables[3])
 }
 
-@BindingAdapter(value = ["app:drawableTopCompat"])
+@BindingAdapter(value = ["setDrawableTopCompat"])
 fun TextView.setDrawableTopCompat(@DrawableRes drawableId: Int) {
     setDrawableTopCompat(getDrawable(context, drawableId))
 }
 
-@BindingAdapter(value = ["app:drawableTopCompat"])
+@BindingAdapter(value = ["setDrawableTopCompat"])
 fun TextView.setDrawableTopCompat(drawable: Drawable?) {
     setIntrinsicBounds(drawable)
     val drawables: Array<Drawable> = compoundDrawables
     setCompoundDrawables(drawables[0], drawable, drawables[2], drawables[3])
 }
 
-@BindingAdapter(value = ["app:drawableEndCompat"])
+@BindingAdapter(value = ["setDrawableEndCompat"])
 fun TextView.setDrawableEndCompat(@DrawableRes drawableId: Int) {
     setDrawableEndCompat(getDrawable(context, drawableId))
 }
 
-@BindingAdapter(value = ["app:drawableEndCompat"])
+@BindingAdapter(value = ["setDrawableEndCompat"])
 fun TextView.setDrawableEndCompat(drawable: Drawable?) {
     setIntrinsicBounds(drawable)
     val drawables: Array<Drawable> = compoundDrawablesRelative
     setCompoundDrawablesRelative(drawables[0], drawables[1], drawable, drawables[3])
 }
 
-@BindingAdapter(value = ["app:drawableBottomCompat"])
+@BindingAdapter(value = ["setDrawableBottomCompat"])
 fun TextView.setDrawableBottomCompat(@DrawableRes drawableId: Int) {
     setDrawableBottomCompat(getDrawable(context, drawableId))
 }
 
-@BindingAdapter(value = ["app:drawableBottomCompat"])
+@BindingAdapter(value = ["setDrawableBottomCompat"])
 fun TextView.setDrawableBottomCompat(drawable: Drawable?) {
     setIntrinsicBounds(drawable)
     val drawables: Array<Drawable> = compoundDrawables
