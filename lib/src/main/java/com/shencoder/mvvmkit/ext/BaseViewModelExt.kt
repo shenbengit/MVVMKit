@@ -1,15 +1,12 @@
 package com.shencoder.mvvmkit.ext
 
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shencoder.mvvmkit.http.bean.BaseResponse
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.mvvmkit.http.ResultStatus
-import com.shencoder.mvvmkit.util.toastInfo
-import com.shencoder.mvvmkit.util.toastSuccess
-import com.shencoder.mvvmkit.util.toastError
-import com.shencoder.mvvmkit.util.toastWarning
-import com.shencoder.mvvmkit.util.toastNormal
+import com.shencoder.mvvmkit.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,8 +91,31 @@ fun <T> BaseViewModel<*>.request(
     }
 }
 
-fun BaseViewModel<*>.toastError(text: String) = applicationContext.toastError(text)
-fun BaseViewModel<*>.toastSuccess(text: String) = applicationContext.toastSuccess(text)
-fun BaseViewModel<*>.toastInfo(text: String) = applicationContext.toastInfo(text)
-fun BaseViewModel<*>.toastWarning(text: String) = applicationContext.toastWarning(text)
-fun BaseViewModel<*>.toastNormal(text: String) = applicationContext.toastNormal(text)
+fun BaseViewModel<*>.toastError(
+    text: String,
+    @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    withIcon: Boolean = true
+) = applicationContext.toastError(text, duration, withIcon)
+
+fun BaseViewModel<*>.toastSuccess(
+    text: String,
+    @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    withIcon: Boolean = true
+) = applicationContext.toastSuccess(text, duration, withIcon)
+
+fun BaseViewModel<*>.toastInfo(
+    text: String,
+    @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    withIcon: Boolean = true
+) = applicationContext.toastInfo(text, duration, withIcon)
+
+fun BaseViewModel<*>.toastWarning(
+    text: String,
+    @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    withIcon: Boolean = true
+) = applicationContext.toastWarning(text, duration, withIcon)
+
+fun BaseViewModel<*>.toastNormal(
+    text: String,
+    @ToastDuration duration: Int = Toast.LENGTH_SHORT
+) = applicationContext.toastNormal(text, duration)
