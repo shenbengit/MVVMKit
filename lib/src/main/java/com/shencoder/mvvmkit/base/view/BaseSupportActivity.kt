@@ -21,7 +21,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     protected val mTag = javaClass.simpleName
     protected lateinit var mBinding: VDB
     protected lateinit var mViewModel: VM
-    private val mLoadingDialog by lazy { initLoadingDialog() }
+    private lateinit var mLoadingDialog: Dialog
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +33,8 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     override fun onDestroy() {
+        dismissLoadingDialog()
+
         super.onDestroy()
         lifecycle.removeObserver(mViewModel)
         mBinding.unbind()
@@ -102,6 +104,9 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     protected fun showLoadingDialog() {
+        if (this::mLoadingDialog.isInitialized.not()) {
+            mLoadingDialog = initLoadingDialog()
+        }
         mLoadingDialog.run {
             if (isShowing.not()) {
                 show()
@@ -110,6 +115,9 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     protected fun dismissLoadingDialog() {
+        if (this::mLoadingDialog.isInitialized.not()) {
+            return
+        }
         mLoadingDialog.run {
             if (isShowing) {
                 dismiss()

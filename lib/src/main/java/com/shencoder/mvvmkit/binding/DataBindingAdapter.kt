@@ -36,6 +36,7 @@ object DataBindingAdapter {
      * @param isGrayscale           灰度变换
      */
     @JvmStatic
+    @JvmOverloads
     @BindingAdapter(
         value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale"],
         requireAll = false
@@ -65,12 +66,6 @@ object DataBindingAdapter {
             fallback(fallbackImageRes)
             transformations(transformations)
         }
-    }
-
-    @JvmStatic
-    @BindingAdapter("imageSrc")
-    fun ImageView.imageSrc(@DrawableRes resId: Int) {
-        setImageResource(resId)
     }
 
     /**

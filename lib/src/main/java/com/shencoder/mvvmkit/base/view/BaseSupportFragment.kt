@@ -1,5 +1,6 @@
 package com.shencoder.mvvmkit.base.view
 
+import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
@@ -23,7 +26,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     protected lateinit var mBinding: VDB
     protected lateinit var mViewModel: VM
-    private val mLoadingDialog by lazy { initLoadingDialog() }
+    private lateinit var mLoadingDialog: Dialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +45,8 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     override fun onDestroyView() {
+        dismissLoadingDialog()
+
         super.onDestroyView()
         lifecycle.removeObserver(mViewModel)
         mBinding.unbind()
@@ -103,18 +108,32 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     protected fun showLoadingDialog() {
-        mLoadingDialog.run {
-            if (isShowing.not()) {
-                show()
+        if (canShowLoadingDialog()) {
+            if (this::mLoadingDialog.isInitialized.not()) {
+                mLoadingDialog = initLoadingDialog()
+            }
+            mLoadingDialog.run {
+                if (isShowing.not()) {
+                    show()
+                }
             }
         }
     }
 
     protected fun dismissLoadingDialog() {
+        if (this::mLoadingDialog.isInitialized.not()) {
+            return
+        }
         mLoadingDialog.run {
             if (isShowing) {
                 dismiss()
             }
         }
     }
+
+    /**
+     * 是否可以显示[mLoadingDialog]
+     * 考虑到有可能[Activity]和[Fragment]共用[ViewModel]的情况
+     */
+    protected open fun canShowLoadingDialog() = true
 }
