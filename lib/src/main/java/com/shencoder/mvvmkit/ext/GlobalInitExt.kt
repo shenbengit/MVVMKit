@@ -69,7 +69,7 @@ fun initLogger(tag: String, depth: Int = 2, logLevel: Int = LogLevel.NONE) {
  * 可自行初始化
  * You can initialize it yourself
  */
-fun initToasty(allowQueue: Boolean = false) {
+fun initToasty(allowQueue: Boolean = true) {
     Toasty.Config
         .getInstance()
         .allowQueue(allowQueue)

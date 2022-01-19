@@ -50,8 +50,8 @@ ext {
             'leakcanary'   : "com.squareup.leakcanary:leakcanary-android:${versions.leakcanary_version}",
             'autosize'     : "me.jessyan:autosize:${versions.autosize_version}",
 
-            'xlog'         : 'com.elvishew:xlog:1.9.0',
-            'toasty'       : 'com.github.GrenderG:Toasty:1.5.0',
+            'xlog'         : 'com.elvishew:xlog:1.11.0',
+            'toasty'       : 'com.github.GrenderG:Toasty:1.5.2',
             'loadingDialog': 'com.github.shenbengit:LoadingDialog:1.0.5',
 
             'xcrash'       : 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0',
