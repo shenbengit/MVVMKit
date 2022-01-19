@@ -1,8 +1,6 @@
 package com.shencoder.mvvmkitdemo
 
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
 import com.shencoder.mvvmkit.base.viewmodel.DefaultViewModel
 import com.shencoder.mvvmkitdemo.databinding.ActivityMainBinding
