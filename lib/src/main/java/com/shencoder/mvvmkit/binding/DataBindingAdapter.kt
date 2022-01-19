@@ -36,19 +36,18 @@ object DataBindingAdapter {
      * @param isGrayscale           灰度变换
      */
     @JvmStatic
-    @JvmOverloads
     @BindingAdapter(
         value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale"],
         requireAll = false
     )
     fun ImageView.setImageData(
         data: Any?,
-        placeholderImageRes: Drawable? = null,
-        errorImageRes: Drawable? = null,
-        fallbackImageRes: Drawable? = null,
-        roundingRadius: Float = 0f,
-        isBlur: Boolean = false,
-        isGrayscale: Boolean = false
+        placeholderImageRes: Drawable?,
+        errorImageRes: Drawable?,
+        fallbackImageRes: Drawable?,
+        roundingRadius: Float,
+        isBlur: Boolean,
+        isGrayscale: Boolean
     ) {
         val transformations: MutableList<Transformation> = mutableListOf()
         if (isBlur) {

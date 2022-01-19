@@ -8,6 +8,7 @@ import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
 import com.weikaiyun.fragmentation.SupportActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  *
@@ -51,6 +52,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     /**
      * 注入ViewModel
+     * @see [viewModel]
      */
     protected abstract fun injectViewModel(): Lazy<VM>
 

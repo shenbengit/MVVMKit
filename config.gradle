@@ -17,11 +17,11 @@ ext {
             'retrofit_version'     : '2.6.4',
             'okhttp3_version'      : '3.12.13',
             'moshi_version'        : '1.12.0',
-            'koin_version'         : '3.1.2',
+            'koin_version'         : '3.1.5',
             'coil_version'         : '1.4.0',
-            'coroutines_version'   : '1.5.2',
-            'mmkv_version'         : '1.2.10',
-            'fragmentation_version': '1.8.3',
+            'coroutines_version'   : '1.6.0',
+            'mmkv_version'         : '1.2.11',
+            'fragmentation_version': '1.8.4',
             'leakcanary_version'   : '2.7',
             'autosize_version'     : '1.2.1',
     ]
@@ -52,7 +52,7 @@ ext {
 
             'xlog'         : 'com.elvishew:xlog:1.11.0',
             'toasty'       : 'com.github.GrenderG:Toasty:1.5.2',
-            'loadingDialog': 'com.github.shenbengit:LoadingDialog:1.0.5',
+            'loadingDialog': 'com.github.shenbengit:LoadingDialog:1.0.6',
 
             'xcrash'       : 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0',
     ]
