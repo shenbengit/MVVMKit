@@ -2,6 +2,7 @@ package com.shencoder.mvvmkit.base.view
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,9 @@ import androidx.lifecycle.ViewModel
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
+import com.tencent.mmkv.MMKV
 import com.weikaiyun.fragmentation.SupportFragment
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedStateViewModel
@@ -30,6 +33,11 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     protected lateinit var mBinding: VDB
     protected lateinit var mViewModel: VM
     private lateinit var mLoadingDialog: Dialog
+
+    /**
+     * 代替[SharedPreferences]
+     */
+    protected val mmkv: MMKV by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
