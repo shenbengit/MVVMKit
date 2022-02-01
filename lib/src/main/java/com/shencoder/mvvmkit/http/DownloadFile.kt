@@ -42,15 +42,15 @@ class DownloadFile(private val url: String, private val filePath: String) : Koin
     private var success: Success = { }
     private var error: Error = { }
 
-    fun progress(progress: Progress) {
+    fun progress(progress: Progress): DownloadFile = apply {
         this.progress = progress
     }
 
-    fun success(success: Success) {
+    fun success(success: Success): DownloadFile = apply {
         this.success = success
     }
 
-    fun error(error: Error) {
+    fun error(error: Error): DownloadFile = apply {
         this.error = error
     }
 
@@ -116,7 +116,20 @@ class DownloadFile(private val url: String, private val filePath: String) : Koin
 }
 
 sealed class DownloadStatus {
-    data class DownloadProcess(val totalSize: Long, val downloadSize: Long, val progress: Float) :
+    data class DownloadProcess(
+        /**
+         * 文件总大小
+         */
+        val totalSize: Long,
+        /**
+         * 已下载文件大小
+         */
+        val downloadSize: Long,
+        /**
+         * 下载进度[0-1]
+         */
+        val progress: Float
+    ) :
         DownloadStatus()
 
     data class DownloadError(val error: Throwable) : DownloadStatus()

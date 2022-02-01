@@ -7,10 +7,7 @@ import com.shencoder.mvvmkit.http.bean.BaseResponse
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.mvvmkit.http.ResultStatus
 import com.shencoder.mvvmkit.util.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  *
@@ -27,6 +24,16 @@ fun BaseViewModel<*>.launchOnUI(block: suspend CoroutineScope.() -> Unit) =
 
 fun BaseViewModel<*>.launchOnIO(block: suspend CoroutineScope.() -> Unit) =
     viewModelScope.launch(Dispatchers.IO) { block() }
+
+/**
+ * 在主线程延迟执行
+ */
+fun BaseViewModel<*>.launchOnUIDelay(delayMillis: Long, function: () -> Unit) {
+    launchOnUI {
+        delay(delayMillis)
+        function()
+    }
+}
 
 /**
  * 网络请求

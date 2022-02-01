@@ -32,4 +32,4 @@ open class BaseRemoteRepository<T : IRemoteDataSource>(
 /**
  * 不需要数据
  */
-open class BaseNothingRepository : BaseRepository()
+class BaseNothingRepository : BaseRepository()
