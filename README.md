@@ -35,6 +35,8 @@ dependencies {
 ## 演示用例
 详见[SrsRtcAndroidClient](https://github.com/shenbengit/SrsRtcAndroidClient)
 
+> 如果您想快速使用，您需要先了解Kotlin语法、Databinding、Koin等相关知识。
+
 ## 项目中集成的三方组件
 
 ### Android Jetpack 
@@ -285,10 +287,164 @@ class RetrofitClient : BaseRetrofitClient() {
 
     fun getApiService(): ApiService {
         if (this::apiService.isInitialized.not()) {
-            setBaseUrl(SIGNAL.BASE_API_HTTPS_URL)
+            setBaseUrl(Constants.BASE_API_HTTPS_URL)
         }
         return apiService
     }
 }
 ```
+#### 文件下载（DownloadRetrofitClient）
+使用示例：
+```kotlin
+GlobalScope.launch {
+    //下载文件
+    DownloadFile(
+        "http://ip:port/xxx.txt",
+        "test.txt"
+    ).progress { totalSize: Long, downloadSize: Long, /*[0-1]*/progress: Float ->
+        //进度回调
+    }.success { file: File ->
+        //下载成功
+    }.error { error: Throwable ->
+        //下载失败
+    }.startDownload()//开始下载 suspend 方法
+}
+```
+#### BaseResponse（网络请求接口返回继承基类）
+这个是在BaseViewModel中快速使用网络请求所用，不强制使用。    
+一般来说网络请求结果返回都会有对应的状态返回，如成功、失败、错误等。    
+这样在返回结果实体bean中去继承此类，则可以快速执行条件判断，如下：
+```kotlin
+open class ApiResponse<T>(
+    @Json(name = "code")
+    val code: Int,
+    @Json(name = "data")
+    val data: T?,
+    @Json(name = "msg")
+    val msg: String
+) : BaseResponse<T>() {
+
+    override fun isSuccess(): Boolean {
+        return code == 200
+    }
+
+    override fun getResponseCode(): Int {
+        return code
+    }
+
+    override fun getResponseMsg(): String {
+        return msg
+    }
+
+    override fun getResponseData(): T? {
+        return data
+    }
+}
+```
+```kotlin
+data class UserInfoBean(
+    @Json(name = "createdAt")
+    val createdAt: String,
+    @Json(name = "id")
+    val id: Int,
+    @Json(name = "userId")
+    val userId: String,
+    @Json(name = "userType")
+    val userType: String,
+    @Json(name = "username")
+    val username: String
+)
+```
+```kotlin
+interface ApiService {
+    /**
+     * 获取所有用户信息
+     * 仅查询客户端；
+     * query clients only.
+     */
+    @GET("/srs_rtc/user/getAllUserInfo")
+    suspend fun getAllUser(): ApiResponse<List<UserInfoBean>>
+}
+```
+```kotlin
+class MainViewModel(
+    application: Application,
+    repo: BaseNothingRepository
+) : BaseViewModel<BaseNothingRepository>(application, repo) {
+
+    private val retrofitClient : RetrofitClient by inject()
+    
+    override fun onCreate(owner: LifecycleOwner) {
+        httpRequest({
+            retrofitClient.getApiService().getAllUser()
+        }, onSuccess = {
+            //请求成功
+            val data = it.data
+            if (data == null) {//之所以判断是否为null，是因为考虑到有的网络请求返回值是只有状态值，而没有内容。
+                toastWarning("userList is null.")
+                return@httpRequest
+            }
+            analyticalData(data, unSelectedSet)
+        }, onFailure = {
+            //请求失败
+            XLog.w("getAllUser failed,code:${it.code}, msg: ${it.msg}")
+            toastWarning("getAllUser failed: ${it.msg}")
+        }, onError = {
+            //网络请求错误
+            XLog.w("getAllUser error: ${it.throwable.message}")
+            toastWarning("getAllUser error: ${it.throwable.message}")
+        }, isShowLoadingDialog = true)
+    }
+}
+```
+### Koin(依赖注入)
+这一部分需要你先去了解Koin相关知识（比Dagger简单多了）    
+本库中在初始化时已经默认加入了一些要默认注入的库：
+```kotlin
+private val defaultModule = module {
+    factory { BaseNothingRepository() }
+    viewModel { DefaultViewModel(get(), get()) }
+}
+
+/**
+ * 单例模式
+ */
+private val singleModule = module {
+    //默认加入了MMKV
+    single { MMKV.defaultMMKV() }
+    single { DownloadRetrofitClient() }
+}
+
+internal val appModule = listOf(defaultModule, singleModule)
+```
+比如说上面的RetrofitClient，我们就可以这样：
+```kotlin
+private val singleModule = module {
+    single { RetrofitClient() }
+}
+val appModule = mutableListOf(singleModule)
+```
+用的时候直接这样：
+```kotlin
+private val retrofitClient : RetrofitClient by inject()
+```
+其他更多示例，请看[SrsRtcAndroidClient](https://github.com/shenbengit/SrsRtcAndroidClient)、[AppModule](https://github.com/shenbengit/SrsRtcAndroidClient/blob/master/app/src/main/java/com/shencoder/srs_rtc_android_client/di/AppModule.kt)、[ViewModelModule](https://github.com/shenbengit/SrsRtcAndroidClient/blob/master/app/src/main/java/com/shencoder/srs_rtc_android_client/di/ViewModelModule.kt)，代码是最好的老师。
+
+### Databinding
+本库中封装了一些Databinding中常用的一些方法，具体可以看下[DataBindingAdapter](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/binding/DataBindingAdapter.kt)，方便快速开发。
+
+### Toast(吐司)
+这一步对Toast进行了扩展，在Activity、Fragment、Dialog、ViewModel中可以直接使用，如：
+```kotlin
+toastError("error")
+toastSuccess("success")
+toastWarning("warning")
+toastNormal("normal")
+```
+### 其他
+还有一些功能方法封装，如MoshiUtil、Nv21ToBitmap等，具体在[util](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/util)包下，可自行查看。
+
+
+# [LICENSE](https://github.com/shenbengit/MVVMKit/blob/master/LICENSE)
+
 
