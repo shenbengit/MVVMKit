@@ -433,7 +433,7 @@ private val retrofitClient : RetrofitClient by inject()
 ### Databinding
 本库中封装了一些Databinding中常用的一些方法，具体可以看下[DataBindingAdapter](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/binding/DataBindingAdapter.kt)，方便快速开发。
 
-### Toast(吐司)
+### Toast(吐司)扩展方法
 这一步对Toast进行了扩展，在Activity、Fragment、Dialog、ViewModel中可以直接使用，如：
 ```kotlin
 toastError("error")
@@ -441,6 +441,8 @@ toastSuccess("success")
 toastWarning("warning")
 toastNormal("normal")
 ```
+### BaseViewModel扩展方法
+BaseViewModel相关扩展方法在[BaseViewModelExt](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/ext/BaseViewModelExt.kt).
 ### 其他
 还有一些功能方法封装，如MoshiUtil、Nv21ToBitmap等，具体在[util](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/util)包下，可自行查看。
 
