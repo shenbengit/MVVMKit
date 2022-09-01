@@ -1,16 +1,14 @@
 package com.shencoder.mvvmkit.coil
 
-import coil.bitmap.BitmapPool
+import coil.ImageLoader
 import coil.decode.DataSource
-import coil.decode.Options
+import coil.decode.ImageSource
 import coil.fetch.FetchResult
 import coil.fetch.Fetcher
 import coil.fetch.SourceResult
-import coil.size.Size
-import okio.buffer
-import okio.source
-import java.io.ByteArrayInputStream
 import coil.loadAny
+import coil.request.Options
+import okio.Buffer
 
 /**
  * [loadAny] 图片加载框架不支持 [ByteArray] ，需要自己实现
@@ -19,20 +17,28 @@ import coil.loadAny
  * @date    2020/12/30 11:05
  * @email   714081644@qq.com
  */
-class ByteArrayFetcher : Fetcher<ByteArray> {
+class ByteArrayFetcher(
+    private val data: ByteArray,
+    private val options: Options
+) : Fetcher {
 
-    override suspend fun fetch(
-        pool: BitmapPool,
-        data: ByteArray,
-        size: Size,
-        options: Options
-    ): FetchResult {
+
+    override suspend fun fetch(): FetchResult {
+        val source = try {
+            Buffer().apply { write(data) }
+        } finally {
+        }
         return SourceResult(
-            source = ByteArrayInputStream(data).source().buffer(),
+            source = ImageSource(source,options.context),
             mimeType = null,
             dataSource = DataSource.MEMORY
         )
     }
 
-    override fun key(data: ByteArray): String? = null
+    class Factory : Fetcher.Factory<ByteArray> {
+
+        override fun create(data: ByteArray, options: Options, imageLoader: ImageLoader): Fetcher {
+            return ByteArrayFetcher(data, options)
+        }
+    }
 }

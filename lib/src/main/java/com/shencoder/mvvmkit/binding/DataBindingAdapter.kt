@@ -10,11 +10,11 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import coil.loadAny
-import coil.transform.BlurTransformation
-import coil.transform.GrayscaleTransformation
+import coil.load
 import coil.transform.RoundedCornersTransformation
 import coil.transform.Transformation
+import com.shencoder.mvvmkit.coil.BlurTransformation
+import com.shencoder.mvvmkit.coil.GrayscaleTransformation
 
 
 /**
@@ -59,7 +59,7 @@ object DataBindingAdapter {
         if (isGrayscale) {
             transformations.add(GrayscaleTransformation())
         }
-        loadAny(data) {
+        load(data) {
             placeholder(placeholderImageRes)
             error(errorImageRes)
             fallback(fallbackImageRes)

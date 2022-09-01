@@ -6,23 +6,23 @@ allprojects {
 
 ext {
     android = [
-            'compileSdkVersion': 30,
-            'buildToolsVersion': '30.0.3',
-            'minSdkVersion'    : 19,
-            'targetSdkVersion' : 30
+            'compileSdkVersion': 32,
+            'buildToolsVersion': '32.0.0',
+            'minSdkVersion'    : 21,
+            'targetSdkVersion' : 32
     ]
 
     versions = [
-            'lifecycle_version'    : '2.3.1',
-            'retrofit_version'     : '2.6.4',
-            'okhttp3_version'      : '3.12.13',
-            'moshi_version'        : '1.12.0',
-            'koin_version'         : '3.1.5',
-            'coil_version'         : '1.4.0',
-            'coroutines_version'   : '1.6.0',
-            'mmkv_version'         : '1.2.11',
+            'lifecycle_version'    : '2.5.0',
+            'retrofit_version'     : '2.9.0',
+            'okhttp3_version'      : '4.10.0',
+            'moshi_version'        : '1.13.0',
+            'koin_version'         : '3.2.0',
+            'coil_version'         : '2.2.0',
+            'coroutines_version'   : '1.6.4',
+            'mmkv_version'         : '1.2.14',
             'fragmentation_version': '1.8.4',
-            'leakcanary_version'   : '2.7',
+            'leakcanary_version'   : '2.9.1',
             'autosize_version'     : '1.2.1',
     ]
 
@@ -30,17 +30,19 @@ ext {
             'lifecycle'    : [
                     'lifecycle_runtime_ktx'  : "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle_version}",
                     'lifecycle_viewmodel_ktx': "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle_version}",
-                    'lifecycle_common_java8' : "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle_version}"
+                    'lifecycle_common_java8' : "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle_version}",
+                    'lifecycle_livedata_ktx' : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle_version}"
             ],
             'http'         : [
                     'retrofit'                   : "com.squareup.retrofit2:retrofit:${versions.retrofit_version}",
                     'converter_moshi'            : "com.squareup.retrofit2:converter-moshi:${versions.retrofit_version}",
                     'converter_simplexml'        : "com.squareup.retrofit2:converter-simplexml:${versions.retrofit_version}",
-                    'okhttp3'                    : "com.squareup.okhttp3:okhttp:${versions.okhttp3_version}",
-                    'okhttp3_logging_interceptor': "com.squareup.okhttp3:logging-interceptor:${versions.okhttp3_version}",
-                    'moshi_kotlin'               : "com.squareup.moshi:moshi-kotlin:${versions.moshi_version}"
+                    'okhttp3_logging_interceptor': "com.squareup.okhttp3:logging-interceptor:${versions.okhttp3_version}"
             ],
-
+            'moshi'        : [
+                    'moshi_kotlin'        : "com.squareup.moshi:moshi-kotlin:${versions.moshi_version}",
+                    'moshi_kotlin_codegen': "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi_version}",
+            ],
             'koin'         : "io.insert-koin:koin-android:${versions.koin_version}",
             'coil'         : "io.coil-kt:coil:${versions.coil_version}",
             'coroutines'   : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines_version}",
