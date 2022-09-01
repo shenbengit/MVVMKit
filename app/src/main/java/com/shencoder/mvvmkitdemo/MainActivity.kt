@@ -7,7 +7,8 @@ import com.shencoder.mvvmkitdemo.databinding.ActivityMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class MainActivity : BaseSupportActivity<DefaultViewModel,ActivityMainBinding>() {
+class MainActivity : BaseSupportActivity<DefaultViewModel, ActivityMainBinding>() {
+
     override fun getLayoutId(): Int {
         return R.layout.activity_main
     }
