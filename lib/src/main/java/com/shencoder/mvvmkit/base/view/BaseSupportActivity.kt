@@ -79,9 +79,9 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
         lifecycle.addObserver(mViewModel)
         mBinding.lifecycleOwner = this
         //注意：子类不可再重新执行此方法，已防止崩溃，具体的回调请看[baseLiveDataObserver(String)]
-        mViewModel.baseLiveData.observe(this, {
+        mViewModel.baseLiveData.observe(this) {
             baseLiveDataObserver(it)
-        })
+        }
     }
 
     /**
