@@ -49,21 +49,24 @@ object DataBindingAdapter {
         isBlur: Boolean,
         isGrayscale: Boolean
     ) {
-        val transformations: MutableList<Transformation> = mutableListOf()
-        if (isBlur) {
-            transformations.add(BlurTransformation(context))
-        }
-        if (roundingRadius > 0f) {
-            transformations.add(RoundedCornersTransformation(roundingRadius))
-        }
-        if (isGrayscale) {
-            transformations.add(GrayscaleTransformation())
-        }
         load(data) {
             placeholder(placeholderImageRes)
             error(errorImageRes)
             fallback(fallbackImageRes)
-            transformations(transformations)
+
+            if (isBlur || roundingRadius > 0f || isGrayscale) {
+                val transformations: MutableList<Transformation> = mutableListOf()
+                if (isBlur) {
+                    transformations.add(BlurTransformation(context))
+                }
+                if (roundingRadius > 0f) {
+                    transformations.add(RoundedCornersTransformation(roundingRadius))
+                }
+                if (isGrayscale) {
+                    transformations.add(GrayscaleTransformation())
+                }
+                transformations(transformations)
+            }
         }
     }
 
