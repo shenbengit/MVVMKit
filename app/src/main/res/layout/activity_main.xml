@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="com.shencoder.mvvmkitdemo.R" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,8 +15,9 @@
 
         <ImageView
             android:id="@+id/iv"
-            loadImageData="@{@drawable/ic_test_bg}"
+            isBlur="@{true}"
             isGrayscale="@{true}"
+            loadImageData="@{R.drawable.ic_test_bg}"
             android:layout_width="150dp"
             android:layout_height="150dp"
             app:layout_constraintBottom_toBottomOf="parent"
