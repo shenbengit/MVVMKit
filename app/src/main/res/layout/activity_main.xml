@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="com.shencoder.mvvmkitdemo.R"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/iv"
-            loadImageData="@{@drawable/ic_test_bg}"
+            loadImageData="@{R.drawable.ic_test_bg}"
             isGrayscale="@{true}"
             android:layout_width="150dp"
             android:layout_height="150dp"
