@@ -13,6 +13,7 @@ allprojects {
 ```
 ### 添加依赖(项目目录下build.gradle文件)
 [![](https://jitpack.io/v/shenbengit/MVVMKit.svg)](https://jitpack.io/#shenbengit/MVVMKit)
+> 从v1.1.0版本开始，**minSdkVersion**调整为**21**，分支[1.0.x](https://github.com/shenbengit/MVVMKit/tree/1.0.x)**minSdkVersion**调整为**19**； 
 ```gradle
 plugins {
     ...
@@ -62,7 +63,7 @@ dependencies {
 ### 初始化
 建议在**Application**中执行.
 ```kotlin
-class App : Application(), ImageLoaderFactory {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -88,17 +89,6 @@ class App : Application(), ImageLoaderFactory {
          
         //快速初始化，包括上面的五个方法，只不过是默认配置
         globalInit(BuildConfig.DEBUG, Constant.TAG, koinApplication)
-    }
-
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(this)
-            .componentRegistry {
-                //Coil 图片加载框架不支持 ByteArray，如果想加载Base64字符串，只需将Base64转成ByteArray即可
-                add(ByteArrayFetcher())
-                //直接使用网络流显示图片-BufferedSource
-                add(BufferedSourceFetcher())
-            }
-            .build()
     }
 }
 ```
