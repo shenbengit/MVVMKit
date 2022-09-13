@@ -1,5 +1,6 @@
 package com.shencoder.mvvmkit.base.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
@@ -95,7 +96,6 @@ abstract class BaseViewModel<REPOSITORY : IRepository>(
         applicationContext.stopService(intent)
     }
 
-
     /**
      * 显示加载dialog
      */
@@ -123,6 +123,7 @@ abstract class BaseViewModel<REPOSITORY : IRepository>(
     /**
      * @see _baseLiveData
      */
+    @SuppressLint("WrongThread")
     @AnyThread
     protected fun setBaseLiveDataValue(value: String) {
         if (isOnMainThread()) {
