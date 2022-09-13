@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    compileOnly 'androidx.appcompat:appcompat:1.1.0'
 
     def lifecycle = rootProject.ext.deps.lifecycle
     api lifecycle.lifecycle_runtime_ktx
@@ -73,7 +73,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.shencoder'
                 artifactId = 'mvvmkit'
-                version = '1.0.7'
+                version = '1.1.0'
             }
         }
     }
