@@ -13,6 +13,7 @@ allprojects {
 ```
 ### 添加依赖(项目目录下build.gradle文件)
 [![](https://jitpack.io/v/shenbengit/MVVMKit.svg)](https://jitpack.io/#shenbengit/MVVMKit)
+> v1.0.0版本**minSdkVersion**为**19**，v1.1.x版本**minSdkVersion**调整为**21**，为长期维护版本，详见分支[master](https://github.com/shenbengit/MVVMKit)； 
 ```gradle
 plugins {
     ...
