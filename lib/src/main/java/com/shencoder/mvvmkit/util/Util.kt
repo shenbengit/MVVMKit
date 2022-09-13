@@ -1,6 +1,7 @@
 package com.shencoder.mvvmkit.util
 
 import android.content.Context
+import android.os.Looper
 import android.util.TypedValue
 import java.util.*
 import kotlin.math.roundToInt
@@ -41,3 +42,9 @@ fun Context.sp2px(dp: Float): Int {
         resources.displayMetrics
     ).roundToInt()
 }
+
+/** Returns {@code true} if called on the main thread, {@code false} otherwise. */
+fun isOnMainThread() = Looper.getMainLooper() == Looper.myLooper()
+
+/** Returns {@code true} if called on a background thread, {@code false} otherwise. */
+fun isOnBackgroundThread() = isOnMainThread().not()
