@@ -29,8 +29,14 @@ import org.koin.androidx.viewmodel.ext.android.sharedStateViewModel
  */
 abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : ViewDataBinding> :
     SupportFragment() {
+    private var _binding: VDB? = null
 
-    protected lateinit var mBinding: VDB
+    /**
+     * 仅在[onCreateView]->[onDestroyView]之间有效，不可在其他生命周期之外调用
+     */
+    protected val mBinding: VDB
+        get() = _binding!!
+
     protected lateinit var mViewModel: VM
     private lateinit var mLoadingDialog: Dialog
 
@@ -44,7 +50,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+        _binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
         return mBinding.root
     }
 
@@ -59,8 +65,9 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
         dismissLoadingDialog()
 
         super.onDestroyView()
-        lifecycle.removeObserver(mViewModel)
-        mBinding.unbind()
+        viewLifecycleOwner.lifecycle.removeObserver(mViewModel)
+        _binding?.unbind()
+        _binding = null
     }
 
     /**
@@ -88,8 +95,8 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     private fun init() {
         mViewModel = injectViewModel().value
         mBinding.setVariable(getViewModelId(), mViewModel)
-        lifecycle.addObserver(mViewModel)
-        mBinding.lifecycleOwner = this
+        viewLifecycleOwner.lifecycle.addObserver(mViewModel)
+        mBinding.lifecycleOwner = viewLifecycleOwner
         //注意：子类不可再重新执行此方法，已防止崩溃，具体的回调请看[baseLiveDataObserver(String)]
         mViewModel.baseLiveData.observe(viewLifecycleOwner) {
             baseLiveDataObserver(it)

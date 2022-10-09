@@ -23,7 +23,15 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     SupportActivity() {
 
     protected val mTag = javaClass.simpleName
-    protected lateinit var mBinding: VDB
+
+    private var _binding: VDB? = null
+
+    /**
+     * 仅在[onCreate]->[onDestroy]之间有效，不可在其他生命周期之外调用
+     */
+    protected val mBinding: VDB
+        get() = _binding!!
+
     protected lateinit var mViewModel: VM
     private lateinit var mLoadingDialog: Dialog
 
@@ -35,7 +43,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         beforeCreateView()
-        mBinding = DataBindingUtil.setContentView(this, getLayoutId())
+        _binding = DataBindingUtil.setContentView(this, getLayoutId())
         init()
         initView()
         initData(savedInstanceState)
@@ -46,7 +54,8 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
 
         super.onDestroy()
         lifecycle.removeObserver(mViewModel)
-        mBinding.unbind()
+        _binding?.unbind()
+        _binding = null
     }
 
     protected open fun beforeCreateView() {
