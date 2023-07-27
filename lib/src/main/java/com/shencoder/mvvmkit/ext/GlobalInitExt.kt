@@ -6,7 +6,6 @@ import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.elvishew.xlog.printer.AndroidPrinter
-import com.shencoder.mvvmkit.R
 import com.tencent.mmkv.MMKV
 import com.tencent.mmkv.MMKVLogLevel
 import com.weikaiyun.fragmentation.Fragmentation
@@ -34,10 +33,10 @@ fun Context.globalInit(debug: Boolean, tag: String, koinApplication: KoinApplica
     initMMKV(if (debug) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelNone)
     initFragmentation(
         debug,
-        R.anim.v_fragment_enter,
-        R.anim.v_fragment_pop_exit,
-        R.anim.v_fragment_pop_enter,
-        R.anim.v_fragment_exit
+        com.weikaiyun.fragmentation.R.anim.v_fragment_enter,
+        com.weikaiyun.fragmentation.R.anim.v_fragment_pop_exit,
+        com.weikaiyun.fragmentation.R.anim.v_fragment_pop_enter,
+        com.weikaiyun.fragmentation.R.anim.v_fragment_exit
     )
     initKoin(koinApplication)
 }

@@ -17,6 +17,7 @@
             android:id="@+id/iv"
             isBlur="@{true}"
             isGrayscale="@{true}"
+            isCircle="@{true}"
             loadImageData="@{R.drawable.ic_test_bg}"
             android:layout_width="150dp"
             android:layout_height="150dp"

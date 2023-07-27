@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import coil.load
+import coil.transform.CircleCropTransformation
 import coil.transform.RoundedCornersTransformation
 import coil.transform.Transformation
 import com.shencoder.mvvmkit.coil.BlurTransformation
@@ -34,10 +35,11 @@ object DataBindingAdapter {
      * @param roundingRadius        圆角
      * @param isBlur                是否高斯模糊
      * @param isGrayscale           灰度变换
+     * @param isCircle              裁剪成圆形
      */
     @JvmStatic
     @BindingAdapter(
-        value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale"],
+        value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale", "isCircle"],
         requireAll = false
     )
     fun ImageView.setImageData(
@@ -47,7 +49,8 @@ object DataBindingAdapter {
         fallbackImageRes: Drawable?,
         roundingRadius: Float,
         isBlur: Boolean,
-        isGrayscale: Boolean
+        isGrayscale: Boolean,
+        isCircle: Boolean
     ) {
         load(data) {
             placeholder(placeholderImageRes)
@@ -59,8 +62,12 @@ object DataBindingAdapter {
                 if (isBlur) {
                     transformations.add(BlurTransformation(context))
                 }
-                if (roundingRadius > 0f) {
-                    transformations.add(RoundedCornersTransformation(roundingRadius))
+                if (isCircle) {
+                    transformations.add(CircleCropTransformation())
+                } else {
+                    if (roundingRadius > 0f) {
+                        transformations.add(RoundedCornersTransformation(roundingRadius))
+                    }
                 }
                 if (isGrayscale) {
                     transformations.add(GrayscaleTransformation())
