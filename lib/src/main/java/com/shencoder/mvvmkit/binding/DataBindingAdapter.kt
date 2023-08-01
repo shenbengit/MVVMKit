@@ -137,6 +137,12 @@ object DataBindingAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter(value = ["setViewSelected"])
+    fun View.setViewSelected(selected: Boolean) {
+        isSelected = selected
+    }
+
+    @JvmStatic
     @BindingAdapter(value = ["setRefreshingStatus"])
     fun SwipeRefreshLayout.setRefreshingStatus(isRefreshing: Boolean) {
         this.isRefreshing = isRefreshing
