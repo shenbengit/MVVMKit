@@ -17,20 +17,28 @@ abstract class BaseRetrofitClient {
 
     abstract fun generateOkHttpBuilder(builder: OkHttpClient.Builder): OkHttpClient.Builder
 
-    open fun generateRetrofitBuilder(builder: Retrofit.Builder): Retrofit.Builder{
+    open fun generateRetrofitBuilder(builder: Retrofit.Builder): Retrofit.Builder {
         return builder
     }
 
-    fun <T> getApiService(service: Class<T>, baseUrl: String): T {
-        //默认添加对Moshi的支持
-        val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
-
+    @JvmOverloads
+    fun <T> getApiService(
+        service: Class<T>,
+        baseUrl: String,
+        useDefaultMoshiConverterFactory: Boolean = true
+    ): T {
         val retrofitBuilder = Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(generateOkHttpBuilder(OkHttpClient.Builder()).build())
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .also {
+                if (useDefaultMoshiConverterFactory) {
+                    //默认添加对Moshi的支持
+                    val moshi = Moshi.Builder()
+                        .addLast(KotlinJsonAdapterFactory())
+                        .build()
+                    it.addConverterFactory(MoshiConverterFactory.create(moshi))
+                }
+            }
 
         return generateRetrofitBuilder(retrofitBuilder)
             .build().create(service)
