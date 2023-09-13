@@ -28,21 +28,17 @@ fun BaseViewModel<*>.launchOnIO(block: suspend CoroutineScope.() -> Unit) =
 /**
  * 在主线程延迟执行
  */
-fun BaseViewModel<*>.launchOnUIDelay(delayMillis: Long, function: () -> Unit) {
-    launchOnUI {
-        delay(delayMillis)
-        function()
-    }
+fun BaseViewModel<*>.launchOnUIDelay(delayMillis: Long, function: () -> Unit) = launchOnUI {
+    delay(delayMillis)
+    function()
 }
 
 /**
  * 网络请求
  * @param block 网络请求具体方法
  * @param onSuccess 请求成功结果回调
- * @param onFailure 请求失败结果回调（网络请求成功，但不是成功结果），一般公共的失败结果可在[defaultHandleFailure]中处理
- * @param onError 请求异常结果回调，一般公共的异常结果可在[defaultHandleError]中处理
- * @param defaultHandleFailure 默认处理公共的失败结果
- * @param defaultHandleError 默认处理异常的失败结果
+ * @param onFailure 请求失败结果回调（网络请求成功，但不是成功结果），一般公共的失败结果可在[BaseViewModelExt.defaultHttpRequestHandleFailure]中处理
+ * @param onError 请求异常结果回调，一般公共的异常结果可在[BaseViewModelExt.defaultHttpRequestHandleError]中处理
  * @param isShowLoadingDialog 是否显示LoadingDialog
  * @param onComplete 整个请求流程结束回调
  */
@@ -52,43 +48,39 @@ fun <T> BaseViewModel<*>.httpRequest(
     onFailure: (ResultStatus.Failure) -> Unit = {},
     onError: (ResultStatus.Error) -> Unit = {},
     isShowLoadingDialog: Boolean = true,
-    defaultHandleFailure: ((code: Int, msg: String) -> Unit)? = null,
-    defaultHandleError: ((error: Throwable) -> Unit)? = null,
     onComplete: () -> Unit = {}
-) {
-    launchOnUI {
-        runCatching {
-            if (isShowLoadingDialog) {
-                showLoadingDialog()
-            }
-            withContext(Dispatchers.IO, block)
-        }.onSuccess {
-            if (isShowLoadingDialog) {
-                dismissLoadingDialog()
-            }
-            if (it.isSuccess()) {
-                onSuccess(ResultStatus.onSuccess(it.getResponseData()))
-            } else {
-                //处理公共的失败事件
-                defaultHandleFailure?.invoke(it.getResponseCode(), it.getResponseMsg())
-
-                onFailure(ResultStatus.onFailure(it.getResponseCode(), it.getResponseMsg()))
-            }
-
-            onComplete()
-        }.onFailure {
-            if (isShowLoadingDialog) {
-                dismissLoadingDialog()
-            }
-            //处理公共的异常事件
-            defaultHandleError?.invoke(it)
-
-            onError(ResultStatus.onError(it))
-
-            onComplete()
-        }
+) = launchOnUI {
+    if (isShowLoadingDialog) {
+        showLoadingDialog()
     }
+    val result = runCatching {
+        withContext(Dispatchers.IO, block)
+    }
+
+    if (isShowLoadingDialog) {
+        dismissLoadingDialog()
+    }
+
+    result.fold({
+        if (it.isSuccess()) {
+            onSuccess(ResultStatus.onSuccess(it.getResponseData()))
+        } else {
+            //处理公共的失败事件
+            BaseViewModelExt.defaultHttpRequestHandleFailure?.invoke(
+                it.getResponseCode(),
+                it.getResponseMsg()
+            )
+            onFailure(ResultStatus.onFailure(it.getResponseCode(), it.getResponseMsg()))
+        }
+    }, {
+        //处理公共的异常事件
+        BaseViewModelExt.defaultHttpRequestHandleError?.invoke(it)
+        onError(ResultStatus.onError(it))
+    })
+
+    onComplete()
 }
+
 
 /**
  * IO请求
@@ -97,27 +89,28 @@ fun <T> BaseViewModel<*>.request(
     block: suspend CoroutineScope.() -> T,
     onSuccess: (ResultStatus.Success<T?>) -> Unit = {},
     onError: (ResultStatus.Error) -> Unit = {},
-    isShowLoadingDialog: Boolean = true
-) {
-    launchOnUI {
-        runCatching {
-            if (isShowLoadingDialog) {
-                showLoadingDialog()
-            }
-            withContext(Dispatchers.IO, block)
-        }.onSuccess {
-            if (isShowLoadingDialog) {
-                dismissLoadingDialog()
-            }
-            onSuccess(ResultStatus.onSuccess(it))
-        }.onFailure {
-            if (isShowLoadingDialog) {
-                dismissLoadingDialog()
-            }
-            onError(ResultStatus.onError(it))
-        }
+    isShowLoadingDialog: Boolean = true,
+    onComplete: () -> Unit = {}
+) = launchOnUI {
+    if (isShowLoadingDialog) {
+        showLoadingDialog()
     }
+    val result = runCatching {
+        withContext(Dispatchers.IO, block)
+    }
+
+    if (isShowLoadingDialog) {
+        dismissLoadingDialog()
+    }
+    result.fold({
+        onSuccess(ResultStatus.onSuccess(it))
+    }, {
+        onError(ResultStatus.onError(it))
+    })
+
+    onComplete()
 }
+
 
 fun BaseViewModel<*>.toastError(
     text: String,
@@ -147,3 +140,15 @@ fun BaseViewModel<*>.toastNormal(
     text: String,
     @ToastDuration duration: Int = Toast.LENGTH_SHORT
 ) = applicationContext.toastNormal(text, duration)
+
+object BaseViewModelExt {
+    /**
+     * 默认处理公共的失败结果
+     */
+    var defaultHttpRequestHandleFailure: ((code: Int, msg: String) -> Unit)? = null
+
+    /**
+     * 默认处理异常的失败结果
+     */
+    var defaultHttpRequestHandleError: ((error: Throwable) -> Unit)? = null
+}
