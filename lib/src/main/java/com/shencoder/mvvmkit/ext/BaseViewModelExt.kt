@@ -66,7 +66,7 @@ fun <T> BaseViewModel<*>.httpRequest(
             onSuccess(ResultStatus.onSuccess(it.getResponseData()))
         } else {
             //处理公共的失败事件
-            BaseViewModelExt.defaultHttpRequestHandleFailure?.invoke(
+            DefaultHttpRequestHandle.defaultHttpRequestFailure?.invoke(
                 it.getResponseCode(),
                 it.getResponseMsg()
             )
@@ -74,7 +74,7 @@ fun <T> BaseViewModel<*>.httpRequest(
         }
     }, {
         //处理公共的异常事件
-        BaseViewModelExt.defaultHttpRequestHandleError?.invoke(it)
+        DefaultHttpRequestHandle.defaultHttpRequestError?.invoke(it)
         onError(ResultStatus.onError(it))
     })
 
@@ -140,15 +140,3 @@ fun BaseViewModel<*>.toastNormal(
     text: String,
     @ToastDuration duration: Int = Toast.LENGTH_SHORT
 ) = applicationContext.toastNormal(text, duration)
-
-object BaseViewModelExt {
-    /**
-     * 默认处理公共的失败结果
-     */
-    var defaultHttpRequestHandleFailure: ((code: Int, msg: String) -> Unit)? = null
-
-    /**
-     * 默认处理异常的失败结果
-     */
-    var defaultHttpRequestHandleError: ((error: Throwable) -> Unit)? = null
-}
