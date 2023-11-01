@@ -30,7 +30,7 @@ fun <T> CoroutineScope.httpRequest(
             onSuccess(ResultStatus.onSuccess(it.getResponseData()))
         } else {
             //处理公共的失败事件
-            DefaultHttpRequestHandle.defaultHttpRequestFailure?.invoke(
+            DefaultHttpRequestHandler.defaultHttpRequestFailure?.invoke(
                 it.getResponseCode(),
                 it.getResponseMsg()
             )
@@ -38,7 +38,7 @@ fun <T> CoroutineScope.httpRequest(
         }
     }, {
         //处理公共的异常事件
-        DefaultHttpRequestHandle.defaultHttpRequestError?.invoke(it)
+        DefaultHttpRequestHandler.defaultHttpRequestError?.invoke(it)
         onError(ResultStatus.onError(it))
     })
 

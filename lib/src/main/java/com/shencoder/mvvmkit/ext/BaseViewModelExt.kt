@@ -37,8 +37,8 @@ fun BaseViewModel<*>.launchOnUIDelay(delayMillis: Long, function: () -> Unit) = 
  * 网络请求
  * @param block 网络请求具体方法
  * @param onSuccess 请求成功结果回调
- * @param onFailure 请求失败结果回调（网络请求成功，但不是成功结果），一般公共的失败结果可在[DefaultHttpRequestHandle.defaultHttpRequestFailure]中处理
- * @param onError 请求异常结果回调，一般公共的异常结果可在[DefaultHttpRequestHandle.defaultHttpRequestError]中处理
+ * @param onFailure 请求失败结果回调（网络请求成功，但不是成功结果），一般公共的失败结果可在[DefaultHttpRequestHandler.defaultHttpRequestFailure]中处理
+ * @param onError 请求异常结果回调，一般公共的异常结果可在[DefaultHttpRequestHandler.defaultHttpRequestError]中处理
  * @param isShowLoadingDialog 是否显示LoadingDialog
  * @param onComplete 整个请求流程结束回调
  */
@@ -66,7 +66,7 @@ fun <T> BaseViewModel<*>.httpRequest(
             onSuccess(ResultStatus.onSuccess(it.getResponseData()))
         } else {
             //处理公共的失败事件
-            DefaultHttpRequestHandle.defaultHttpRequestFailure?.invoke(
+            DefaultHttpRequestHandler.defaultHttpRequestFailure?.invoke(
                 it.getResponseCode(),
                 it.getResponseMsg()
             )
@@ -74,7 +74,7 @@ fun <T> BaseViewModel<*>.httpRequest(
         }
     }, {
         //处理公共的异常事件
-        DefaultHttpRequestHandle.defaultHttpRequestError?.invoke(it)
+        DefaultHttpRequestHandler.defaultHttpRequestError?.invoke(it)
         onError(ResultStatus.onError(it))
     })
 

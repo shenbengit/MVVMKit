@@ -6,7 +6,7 @@ package com.shencoder.mvvmkit.ext
  * @date    2023/10/25 21:41
  * @email   714081644@qq.com
  */
-object DefaultHttpRequestHandle {
+object DefaultHttpRequestHandler {
 
     /**
      * 默认处理公共的失败结果
