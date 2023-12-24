@@ -57,7 +57,7 @@ object DataBindingAdapter {
             error(errorImageRes)
             fallback(fallbackImageRes)
 
-            if (isBlur || roundingRadius > 0f || isGrayscale) {
+            if (roundingRadius > 0f || isBlur || isGrayscale || isCircle) {
                 val transformations: MutableList<Transformation> = mutableListOf()
                 if (isBlur) {
                     transformations.add(BlurTransformation(context))
