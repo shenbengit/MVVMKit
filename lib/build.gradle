@@ -46,7 +46,6 @@ dependencies {
     def lifecycle = rootProject.ext.deps.lifecycle
     api lifecycle.lifecycle_runtime_ktx
     api lifecycle.lifecycle_viewmodel_ktx
-    api lifecycle.lifecycle_common_java8
     api lifecycle.lifecycle_livedata_ktx
 
     def http = rootProject.ext.deps.http
@@ -69,7 +68,7 @@ dependencies {
     api rootProject.ext.deps.loadingDialog
 
     compileOnly 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    compileOnly 'androidx.recyclerview:recyclerview:1.3.0'
+    compileOnly 'androidx.recyclerview:recyclerview:1.3.2'
 }
 
 // Because the components are created only during the afterEvaluate phase, you must
