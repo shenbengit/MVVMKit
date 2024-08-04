@@ -1,21 +1,25 @@
 package com.shencoder.mvvmkit.binding
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.*
+import androidx.annotation.Dimension
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import coil.load
-import coil.transform.CircleCropTransformation
-import coil.transform.RoundedCornersTransformation
-import coil.transform.Transformation
-import com.shencoder.mvvmkit.coil.BlurTransformation
-import com.shencoder.mvvmkit.coil.GrayscaleTransformation
+import com.bumptech.glide.load.Transformation
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.shencoder.mvvmkit.util.ImageUtils.loadImage
+import com.shencoder.mvvmkit.util.dp2px
+import jp.wasabeef.glide.transformations.BlurTransformation
+import jp.wasabeef.glide.transformations.GrayscaleTransformation
 
 
 /**
@@ -37,6 +41,7 @@ object DataBindingAdapter {
      * @param isGrayscale           灰度变换
      * @param isCircle              裁剪成圆形
      */
+    @SuppressLint("CheckResult")
     @JvmStatic
     @BindingAdapter(
         value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale", "isCircle"],
@@ -47,32 +52,38 @@ object DataBindingAdapter {
         placeholderImageRes: Drawable?,
         errorImageRes: Drawable?,
         fallbackImageRes: Drawable?,
+        @Dimension(Dimension.DP)
         roundingRadius: Float,
         isBlur: Boolean,
         isGrayscale: Boolean,
         isCircle: Boolean
     ) {
-        load(data) {
+        loadImage(data) {
             placeholder(placeholderImageRes)
             error(errorImageRes)
             fallback(fallbackImageRes)
-
             if (roundingRadius > 0f || isBlur || isGrayscale || isCircle) {
-                val transformations: MutableList<Transformation> = mutableListOf()
+                val transformations: MutableList<Transformation<Bitmap>> = mutableListOf()
                 if (isBlur) {
-                    transformations.add(BlurTransformation(context))
+                    transformations.add(BlurTransformation())
                 }
                 if (isCircle) {
-                    transformations.add(CircleCropTransformation())
+                    transformations.add(CircleCrop())
                 } else {
                     if (roundingRadius > 0f) {
-                        transformations.add(RoundedCornersTransformation(roundingRadius))
+                        transformations.add(
+                            RoundedCorners(
+                                this@setImageData.context.dp2px(
+                                    roundingRadius
+                                )
+                            )
+                        )
                     }
                 }
                 if (isGrayscale) {
                     transformations.add(GrayscaleTransformation())
                 }
-                transformations(transformations)
+                transform(*transformations.toTypedArray())
             }
         }
     }

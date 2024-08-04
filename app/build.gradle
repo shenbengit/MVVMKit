@@ -50,6 +50,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    api rootProject.ext.deps.glide
+    kapt rootProject.ext.deps.glide_compiler
+
     implementation project(path: ':lib')
     debugImplementation rootProject.ext.deps.leakcanary
 //    implementation 'com.github.shenbengit:MVVMKit:1.0.3'
