@@ -14,10 +14,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.load.Transformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.drake.brv.PageRefreshLayout
+import com.drake.statelayout.StateLayout
+import com.drake.statelayout.Status
+import com.shencoder.mvvmkit.ext.dp2px
 import com.shencoder.mvvmkit.util.ImageUtils.loadImage
-import com.shencoder.mvvmkit.util.dp2px
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.GrayscaleTransformation
 
@@ -30,7 +36,7 @@ import jp.wasabeef.glide.transformations.GrayscaleTransformation
 
 object DataBindingAdapter {
     /**
-     * Coil 加载图片资源
+     * Glide 加载图片资源
      *
      * @param data                  图片资源
      * @param placeholderImageRes   图片加载中显示展位图
@@ -40,11 +46,14 @@ object DataBindingAdapter {
      * @param isBlur                是否高斯模糊
      * @param isGrayscale           灰度变换
      * @param isCircle              裁剪成圆形
+     * @param isCenterCrop
+     * @param isCenterInside
+     * @param isFitCenter
      */
     @SuppressLint("CheckResult")
     @JvmStatic
     @BindingAdapter(
-        value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale", "isCircle"],
+        value = ["loadImageData", "placeholderImageRes", "errorImageRes", "fallbackImageRes", "roundingRadius", "isBlur", "isGrayscale", "isCircle", "isCenterCrop", "isCenterInside", "isFitCenter"],
         requireAll = false
     )
     fun ImageView.setImageData(
@@ -56,14 +65,29 @@ object DataBindingAdapter {
         roundingRadius: Float,
         isBlur: Boolean,
         isGrayscale: Boolean,
-        isCircle: Boolean
+        isCircle: Boolean,
+        isCenterCrop: Boolean,
+        isCenterInside: Boolean,
+        isFitCenter: Boolean,
     ) {
         loadImage(data) {
             placeholder(placeholderImageRes)
             error(errorImageRes)
             fallback(fallbackImageRes)
-            if (roundingRadius > 0f || isBlur || isGrayscale || isCircle) {
+            if (roundingRadius > 0f || isBlur || isGrayscale || isCircle || isCenterCrop || isCenterInside || isFitCenter) {
                 val transformations: MutableList<Transformation<Bitmap>> = mutableListOf()
+                if (isCenterCrop) {
+                    transformations.add(CenterCrop())
+                }
+                if (isCenterInside) {
+                    transformations.add(CenterInside())
+                }
+                if (isFitCenter) {
+                    transformations.add(FitCenter())
+                }
+                if (isGrayscale) {
+                    transformations.add(GrayscaleTransformation())
+                }
                 if (isBlur) {
                     transformations.add(BlurTransformation())
                 }
@@ -73,16 +97,14 @@ object DataBindingAdapter {
                     if (roundingRadius > 0f) {
                         transformations.add(
                             RoundedCorners(
-                                this@setImageData.context.dp2px(
+                                this@setImageData.dp2px(
                                     roundingRadius
                                 )
                             )
                         )
                     }
                 }
-                if (isGrayscale) {
-                    transformations.add(GrayscaleTransformation())
-                }
+
                 transform(*transformations.toTypedArray())
             }
         }
@@ -213,6 +235,69 @@ object DataBindingAdapter {
         setIntrinsicBounds(drawable)
         val drawables: Array<Drawable> = compoundDrawables
         setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawable)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["setSrc"])
+    fun ImageView.setSrc(drawable: Drawable?) {
+        setImageDrawable(drawable)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["setSrc"])
+    fun ImageView.setSrc(resId: Int) {
+        setImageResource(resId)
+    }
+
+    @JvmStatic
+    @BindingAdapter(
+        value = ["setOnPageRefreshCallback", "setOnPageLoadMoreCallback"],
+        requireAll = false
+    )
+    fun PageRefreshLayout.setCallback(refresh: BindingAction?, loadMore: BindingAction?) {
+        if (refresh != null) {
+            onRefresh {
+                refresh.execute()
+            }
+        }
+        if (loadMore != null) {
+            onLoadMore {
+                loadMore.execute()
+            }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["addPageData"])
+    fun PageRefreshLayout.addPageData(data: AddPageData?) {
+        if (data != null) {
+            addData(data.list, adapter = data.adapter, hasMore = { data.hasMore })
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["setPageRefreshEnable", "setPageLoadMoreEnable"], requireAll = false)
+    fun PageRefreshLayout.setRefreshLoadMoreEnable(
+        refreshEnable: Boolean?,
+        loadMoreEnable: Boolean?
+    ) {
+        if (refreshEnable != null) {
+            setEnableRefresh(refreshEnable)
+        }
+        if (loadMoreEnable != null) {
+            setEnableLoadMore(loadMoreEnable)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["setLayoutState"])
+    fun StateLayout.setLayoutState(status: Status) {
+        when (status) {
+            Status.LOADING -> showLoading()
+            Status.EMPTY -> showEmpty()
+            Status.ERROR -> showError()
+            Status.CONTENT -> showContent()
+        }
     }
 
     private fun getDrawable(context: Context, @DrawableRes drawableId: Int) = if (drawableId != 0) {

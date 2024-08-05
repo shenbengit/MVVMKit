@@ -10,8 +10,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.Transition
 import com.elvishew.xlog.XLog
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 /**
  * 加载图片工具类
@@ -358,4 +362,106 @@ object ImageUtils {
             .into(view)
     }
     //</editor-fold>
+
+    suspend fun Context.loadDrawable(
+        obj: Any?,
+        request: RequestBuilder<Drawable>.() -> Unit = {}
+    ): Drawable? =
+        suspendCancellableCoroutine { continuation ->
+            val requests = buildRequestManager()
+            if (requests == null) {
+                continuation.resume(null)
+            } else {
+                val target = object : CustomTarget<Drawable>() {
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        continuation.resume(errorDrawable)
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        continuation.resume(resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        continuation.resume(placeholder)
+                    }
+                }
+                continuation.invokeOnCancellation {
+                    requests.clear(target)
+                }
+
+                loadImage(obj, target, request)
+            }
+        }
+
+    suspend fun FragmentActivity.loadDrawable(
+        obj: Any?,
+        request: RequestBuilder<Drawable>.() -> Unit = {}
+    ): Drawable? =
+        suspendCancellableCoroutine { continuation ->
+            val requests = buildRequestManager()
+            if (requests == null) {
+                continuation.resume(null)
+            } else {
+                val target = object : CustomTarget<Drawable>() {
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        continuation.resume(errorDrawable)
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        continuation.resume(resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        continuation.resume(placeholder)
+                    }
+                }
+                continuation.invokeOnCancellation {
+                    requests.clear(target)
+                }
+
+                loadImage(obj, target, request)
+            }
+        }
+
+    suspend fun Fragment.loadDrawable(
+        obj: Any?,
+        request: RequestBuilder<Drawable>.() -> Unit = {}
+    ): Drawable? =
+        suspendCancellableCoroutine { continuation ->
+            val requests = buildRequestManager()
+            if (requests == null) {
+                continuation.resume(null)
+            } else {
+                val target = object : CustomTarget<Drawable>() {
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        continuation.resume(errorDrawable)
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        continuation.resume(resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        continuation.resume(placeholder)
+                    }
+                }
+                continuation.invokeOnCancellation {
+                    requests.clear(target)
+                }
+
+                loadImage(obj, target, request)
+            }
+        }
 }

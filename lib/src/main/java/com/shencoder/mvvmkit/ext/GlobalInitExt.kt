@@ -1,11 +1,14 @@
 package com.shencoder.mvvmkit.ext
 
+import android.app.Application
 import android.content.Context
 import com.shencoder.mvvmkit.di.appModule
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.elvishew.xlog.printer.AndroidPrinter
+import com.shencoder.mvvmkit.network.NetworkObserverManager
+import com.shencoder.mvvmkit.util.AppManager
 import com.tencent.mmkv.MMKV
 import com.tencent.mmkv.MMKVLogLevel
 import com.weikaiyun.fragmentation.Fragmentation
@@ -28,6 +31,8 @@ import org.koin.core.context.startKoin
  * @param koinApplication
  */
 fun Context.globalInit(debug: Boolean, tag: String, koinApplication: KoinApplication) {
+    (applicationContext as Application).initAppManager()
+
     initLogger(tag, 2, if (debug) LogLevel.ALL else LogLevel.NONE)
     initToasty()
     initMMKV(if (debug) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelNone)
@@ -39,6 +44,11 @@ fun Context.globalInit(debug: Boolean, tag: String, koinApplication: KoinApplica
         com.weikaiyun.fragmentation.R.anim.v_fragment_exit
     )
     initKoin(koinApplication)
+}
+
+fun Application.initAppManager() {
+    AppManager.init(this)
+    NetworkObserverManager.getInstance().init(this)
 }
 
 

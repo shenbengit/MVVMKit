@@ -51,7 +51,7 @@ dependencies {
 - [koin](https://github.com/InsertKoinIO/koin):一个实用的轻量级Kotlin依赖注入框架；
 ### 其他
 - [Moshi](https://github.com/square/moshi):Moshi是一个适用于Android、Java和Kotlin的JSON 库;
-- [coil](https://github.com/coil-kt/coil):由Kotlin Coroutines支持的Android图像加载库；
+- [Glide](https://github.com/bumptech/glide):一个适用于Android的图像加载和缓存库，专注于平滑滚动；
 - [coroutines](https://github.com/Kotlin/kotlinx.coroutines):Kotlin coroutines;
 - [MMKV](https://github.com/Tencent/MMKV):MMKV是基于 mmap 内存映射的 key-value 组件，底层序列化/反序列化使用 protobuf 实现，性能高，稳定性强，代替SharedPreferences；
 - [SFragmentation](https://github.com/weikaiyun/SFragmentation):框架负责管理fragment的各种操作，相比于google新出的navigation框架，更加灵活多变，易于使用；
