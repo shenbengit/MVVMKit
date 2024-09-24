@@ -22,41 +22,45 @@ ext {
             'coroutines_version'   : '1.9.0-RC',
             'mmkv_version'         : '1.3.9',
             'fragmentation_version': '1.8.4',
+            'brv_version'          : '1.6.0',
             'leakcanary_version'   : '2.12',
             'autosize_version'     : '1.2.1',
     ]
 
     deps = [
-            'lifecycle'     : [
+            'lifecycle'            : [
                     'lifecycle_runtime_ktx'  : "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle_version}",
                     'lifecycle_viewmodel_ktx': "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle_version}",
                     'lifecycle_common_java8' : "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle_version}",
                     'lifecycle_livedata_ktx' : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle_version}"
             ],
-            'http'          : [
+            'http'                 : [
                     'retrofit'                   : "com.squareup.retrofit2:retrofit:${versions.retrofit_version}",
                     'converter_moshi'            : "com.squareup.retrofit2:converter-moshi:${versions.retrofit_version}",
                     'converter_simplexml'        : "com.squareup.retrofit2:converter-simplexml:${versions.retrofit_version}",
                     'okhttp3_logging_interceptor': "com.squareup.okhttp3:logging-interceptor:${versions.okhttp3_version}"
             ],
-            'moshi'         : [
+            'moshi'                : [
                     'moshi_kotlin'        : "com.squareup.moshi:moshi-kotlin:${versions.moshi_version}",
                     'moshi_kotlin_codegen': "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi_version}",
             ],
-            'koin'          : "io.insert-koin:koin-android:${versions.koin_version}",
-            'glide'         : "com.github.bumptech.glide:glide:${versions.glide_version}",
-            'glide_compiler': "com.github.bumptech.glide:compiler:${versions.glide_version}",
-            'coroutines'    : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines_version}",
-            'mmkv'          : "com.tencent:mmkv-static:${versions.mmkv_version}",
-            'fragmentation' : "com.github.weikaiyun.SFragmentation:fragmentation:${versions.fragmentation_version}",
+            'koin'                 : "io.insert-koin:koin-android:${versions.koin_version}",
+            'glide'                : "com.github.bumptech.glide:glide:${versions.glide_version}",
+            'glide_compiler'       : "com.github.bumptech.glide:compiler:${versions.glide_version}",
+            'coroutines'           : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines_version}",
+            'mmkv'                 : "com.tencent:mmkv-static:${versions.mmkv_version}",
+            'fragmentation'        : "com.github.weikaiyun.SFragmentation:fragmentation:${versions.fragmentation_version}",
+            'brv'                  : "com.github.liangjingkanji:BRV:${versions.brv_version}",
 
-            'leakcanary'    : "com.squareup.leakcanary:leakcanary-android:${versions.leakcanary_version}",
-            'autosize'      : "me.jessyan:autosize:${versions.autosize_version}",
+            'leakcanary'           : "com.squareup.leakcanary:leakcanary-android:${versions.leakcanary_version}",
+            'autosize'             : "me.jessyan:autosize:${versions.autosize_version}",
 
-            'xlog'          : 'com.elvishew:xlog:1.11.0',
-            'toasty'        : 'com.github.GrenderG:Toasty:1.5.2',
-            'loadingDialog' : 'com.github.shenbengit:LoadingDialog:1.0.6',
+            'xlog'                 : 'com.elvishew:xlog:1.11.0',
+            'toasty'               : 'com.github.GrenderG:Toasty:1.5.2',
+            'loadingDialog'        : 'com.github.shenbengit:LoadingDialog:1.0.6',
+            'glide_transformations': 'jp.wasabeef:glide-transformations:4.3.0',
+            'commons_codec'        : 'commons-codec:commons-codec:1.17.1',
 
-            'xcrash'        : 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0',
+            'xcrash'               : 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0',
     ]
 }

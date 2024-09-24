@@ -53,9 +53,7 @@ fun <T> BaseViewModel<*>.httpRequest(
     if (isShowLoadingDialog) {
         showLoadingDialog()
     }
-    val result = runCatching {
-        withContext(Dispatchers.IO, block)
-    }
+    val result = runCatching { block() }
 
     if (isShowLoadingDialog) {
         dismissLoadingDialog()

@@ -21,9 +21,7 @@ fun <T> CoroutineScope.httpRequest(
     onError: (ResultStatus.Error) -> Unit = {},
     onComplete: () -> Unit = {}
 ) = launch(Dispatchers.Main) {
-    val result = runCatching {
-        withContext(Dispatchers.IO, block)
-    }
+    val result = runCatching { block() }
 
     result.fold({
         if (it.isSuccess()) {

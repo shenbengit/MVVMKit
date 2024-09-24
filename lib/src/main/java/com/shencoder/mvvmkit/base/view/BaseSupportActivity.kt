@@ -8,6 +8,7 @@ import androidx.databinding.ViewDataBinding
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
+import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.tencent.mmkv.MMKV
 import com.weikaiyun.fragmentation.SupportActivity
 import org.koin.android.ext.android.inject
@@ -20,9 +21,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * @email   714081644@qq.com
  */
 abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : ViewDataBinding> :
-    SupportActivity() {
+    SupportActivity(), NetworkObserverManager.Listener {
 
-    protected val mTag = javaClass.simpleName
+    protected val TAG = javaClass.simpleName
 
     private var _binding: VDB? = null
 
@@ -51,11 +52,11 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     override fun onDestroy() {
         dismissLoadingDialog()
-
         super.onDestroy()
         lifecycle.removeObserver(mViewModel)
         _binding?.unbind()
         _binding = null
+        NetworkObserverManager.getInstance().removeListener(this)
     }
 
     protected open fun beforeCreateView() {
@@ -91,6 +92,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
         mViewModel.baseLiveData.observe(this) {
             baseLiveDataObserver(it)
         }
+        NetworkObserverManager.getInstance().addListener(this)
     }
 
     /**
@@ -105,9 +107,11 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
             BaseViewModel.SHOW_LOADING_DIALOG -> {
                 showLoadingDialog()
             }
+
             BaseViewModel.DISMISS_LOADING_DIALOG -> {
                 dismissLoadingDialog()
             }
+
             BaseViewModel.BACK_PRESSED -> {
                 onBackPressedSupport()
             }
@@ -142,5 +146,14 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
                 dismiss()
             }
         }
+    }
+
+    /**
+     * 网络连接状态回调
+     *
+     * @param isOnline
+     */
+    override fun onConnectivityChange(isOnline: Boolean) {
+
     }
 }

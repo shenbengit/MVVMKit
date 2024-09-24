@@ -1,14 +1,9 @@
+@file:JvmName("BindingAdapterExt")
+
 package com.shencoder.mvvmkit.ext
 
 import androidx.annotation.IntRange
 import com.drake.brv.BindingAdapter
-
-/**
- *
- *
- * @date    2023/08/02 22:33
- *
- */
 
 fun BindingAdapter.removeModelAt(index: Int, animation: Boolean = true) {
     mutable.removeAt(index)

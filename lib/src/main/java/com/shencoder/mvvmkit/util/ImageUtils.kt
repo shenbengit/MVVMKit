@@ -19,7 +19,6 @@ import kotlin.coroutines.resume
 
 /**
  * 加载图片工具类
- * @since v3.5
  */
 object ImageUtils {
 

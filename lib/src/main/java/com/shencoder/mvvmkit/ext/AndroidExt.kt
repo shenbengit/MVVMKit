@@ -1,3 +1,5 @@
+@file:JvmName("AndroidExt")
+
 package com.shencoder.mvvmkit.ext
 
 import android.app.Activity
@@ -8,8 +10,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
+import android.os.Looper
 import android.util.TypedValue
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.DimenRes
 import androidx.core.view.WindowCompat
@@ -20,10 +22,7 @@ import com.shencoder.mvvmkit.util.AppManager
 import kotlin.math.roundToInt
 
 /**
- *
- *
- * @date    2021/03/30 10:57
- *
+ * 一些常用方法
  */
 
 fun dp2px(dp: Float): Int {
@@ -34,69 +33,33 @@ fun sp2px(dp: Float): Int {
     return AppManager.context.sp2px(dp)
 }
 
-fun Context.dp2px(dp: Float): Int {
+fun dp2px(@DimenRes id: Int): Int {
+    return AppManager.context.dp2px(id)
+}
+
+fun sp2px(@DimenRes id: Int): Int {
+    return AppManager.context.sp2px(id)
+}
+
+private fun Context.dp2px(dp: Float): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, dp,
         resources.displayMetrics
     ).roundToInt()
 }
 
-fun Context.sp2px(dp: Float): Int {
+private fun Context.sp2px(dp: Float): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_SP, dp,
         resources.displayMetrics
     ).roundToInt()
 }
 
-fun Context.dp2px(@DimenRes id: Int): Int {
+private fun Context.dp2px(@DimenRes id: Int): Int {
     return resources.getDimensionPixelSize(id)
 }
 
-fun Context.sp2px(@DimenRes id: Int): Int {
-    return resources.getDimensionPixelSize(id)
-}
-
-fun Fragment.dp2px(dp: Float): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, dp,
-        resources.displayMetrics
-    ).roundToInt()
-}
-
-fun Fragment.sp2px(dp: Float): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP, dp,
-        resources.displayMetrics
-    ).roundToInt()
-}
-
-fun Fragment.dp2px(@DimenRes id: Int): Int {
-    return resources.getDimensionPixelSize(id)
-}
-
-fun Fragment.sp2px(@DimenRes id: Int): Int {
-    return resources.getDimensionPixelSize(id)
-}
-
-fun View.dp2px(dp: Float): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, dp,
-        resources.displayMetrics
-    ).roundToInt()
-}
-
-fun View.sp2px(dp: Float): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP, dp,
-        resources.displayMetrics
-    ).roundToInt()
-}
-
-fun View.dp2px(@DimenRes id: Int): Int {
-    return resources.getDimensionPixelSize(id)
-}
-
-fun View.sp2px(@DimenRes id: Int): Int {
+private fun Context.sp2px(@DimenRes id: Int): Int {
     return resources.getDimensionPixelSize(id)
 }
 
@@ -219,3 +182,9 @@ fun Context.copyClipData(label: String, text: String) {
     val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     cm.setPrimaryClip(ClipData.newPlainText(label, text))
 }
+
+/** Returns {@code true} if called on the main thread, {@code false} otherwise. */
+fun isOnMainThread() = Looper.getMainLooper() == Looper.myLooper()
+
+/** Returns {@code true} if called on a background thread, {@code false} otherwise. */
+fun isOnBackgroundThread() = isOnMainThread().not()

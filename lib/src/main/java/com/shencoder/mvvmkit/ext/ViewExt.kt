@@ -8,10 +8,20 @@ fun View.isLayoutRTL(): Boolean {
 }
 
 private var triggerLastTime: Long = 0L
-fun <T : View> T.clickWithTrigger(delay: Long = 500, block: (T) -> Unit) {
+
+/**
+ * 点击防抖动，默认500ms
+ * tips：这个操作是全局的
+ *
+ * @param T
+ * @param interval
+ * @param block
+ * @receiver
+ */
+fun <T : View> T.clickWithTrigger(interval: Long = 500, block: (T) -> Unit) {
     setOnClickListener {
         val currentClickTime = System.currentTimeMillis()
-        if (currentClickTime - triggerLastTime >= delay) {
+        if (currentClickTime - triggerLastTime >= interval) {
             triggerLastTime = currentClickTime
             block(this)
         }

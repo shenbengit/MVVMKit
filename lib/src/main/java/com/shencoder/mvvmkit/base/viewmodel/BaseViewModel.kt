@@ -15,7 +15,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.shencoder.mvvmkit.R
 import com.shencoder.mvvmkit.base.repository.IRepository
-import com.shencoder.mvvmkit.util.isOnMainThread
+import com.shencoder.mvvmkit.ext.isOnMainThread
 import com.tencent.mmkv.MMKV
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

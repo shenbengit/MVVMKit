@@ -17,7 +17,16 @@ sealed class ResultStatus<T> {
     /**
      * 请求成功
      */
-    data class Success<T>(val data: T?) : ResultStatus<T>()
+    data class Success<T>(val data: T?) : ResultStatus<T>() {
+
+        val requireData: T
+            get() {
+                require(data != null) {
+                    "`data` is null."
+                }
+                return data
+            }
+    }
 
     /**
      * 请求失败

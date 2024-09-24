@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
+import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.tencent.mmkv.MMKV
 import com.weikaiyun.fragmentation.SupportFragment
 import org.koin.android.ext.android.inject
@@ -28,7 +29,10 @@ import org.koin.androidx.viewmodel.ext.android.sharedStateViewModel
  * @email   714081644@qq.com
  */
 abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : ViewDataBinding> :
-    SupportFragment() {
+    SupportFragment(), NetworkObserverManager.Listener {
+
+    protected val TAG = javaClass.simpleName
+
     private var _binding: VDB? = null
 
     /**
@@ -63,11 +67,11 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     override fun onDestroyView() {
         dismissLoadingDialog()
-
         super.onDestroyView()
         viewLifecycleOwner.lifecycle.removeObserver(mViewModel)
         _binding?.unbind()
         _binding = null
+        NetworkObserverManager.getInstance().removeListener(this)
     }
 
     /**
@@ -101,6 +105,8 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
         mViewModel.baseLiveData.observe(viewLifecycleOwner) {
             baseLiveDataObserver(it)
         }
+
+        NetworkObserverManager.getInstance().addListener(this)
     }
 
     /**
@@ -114,6 +120,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
             BaseViewModel.SHOW_LOADING_DIALOG -> {
                 showLoadingDialog()
             }
+
             BaseViewModel.DISMISS_LOADING_DIALOG -> {
                 dismissLoadingDialog()
             }
@@ -157,4 +164,13 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
      * 考虑到有可能[Activity]和[Fragment]共用[ViewModel]的情况
      */
     protected open fun canShowLoadingDialog() = true
+
+    /**
+     * 网络连接状态回调
+     *
+     * @param isOnline
+     */
+    override fun onConnectivityChange(isOnline: Boolean) {
+
+    }
 }

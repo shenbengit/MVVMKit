@@ -36,13 +36,7 @@ fun Context.globalInit(debug: Boolean, tag: String, koinApplication: KoinApplica
     initLogger(tag, 2, if (debug) LogLevel.ALL else LogLevel.NONE)
     initToasty()
     initMMKV(if (debug) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelNone)
-    initFragmentation(
-        debug,
-        com.weikaiyun.fragmentation.R.anim.v_fragment_enter,
-        com.weikaiyun.fragmentation.R.anim.v_fragment_pop_exit,
-        com.weikaiyun.fragmentation.R.anim.v_fragment_pop_enter,
-        com.weikaiyun.fragmentation.R.anim.v_fragment_exit
-    )
+    initFragmentation(debug)
     initKoin(koinApplication)
 }
 
@@ -86,13 +80,13 @@ fun initToasty(allowQueue: Boolean = true) {
 }
 
 /**
- * 初始化mmvk
+ * 初始化mmkv
  * 可自行初始化
  * You can initialize it yourself
  */
 fun Context.initMMKV(
     logLevel: MMKVLogLevel = MMKVLogLevel.LevelNone,
-    mmkvPath: String? = getExternalFilesDir("mmkv")?.absolutePath
+    mmkvPath: String? = null
 ) {
     if (mmkvPath.isNullOrBlank()) {
         MMKV.initialize(this, logLevel)

@@ -95,13 +95,7 @@ object DataBindingAdapter {
                     transformations.add(CircleCrop())
                 } else {
                     if (roundingRadius > 0f) {
-                        transformations.add(
-                            RoundedCorners(
-                                this@setImageData.dp2px(
-                                    roundingRadius
-                                )
-                            )
-                        )
+                        transformations.add(RoundedCorners(dp2px(roundingRadius)))
                     }
                 }
 

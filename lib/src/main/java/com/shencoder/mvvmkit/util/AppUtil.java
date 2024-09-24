@@ -6,10 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
+ * @see org.apache.commons 依赖下的工具类
+ *
  * @author ShenBen
  * @date 2019/12/4 17:21
  * @email 714081644@qq.com
  */
+@Deprecated
 public class AppUtil {
     /**
      * Used to build output as Hex

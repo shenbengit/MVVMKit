@@ -17,6 +17,7 @@ import java.util.Deque
  * 应用程序Activity管理类：用于Activity管理和应用程序退出
  * Application Activity management class: used for Activity management and application exit
  *
+ * 支持app前后台监听
  *
  * 仅适应于主进程
  * Adapts only to the main process
@@ -34,8 +35,8 @@ object AppManager : DefaultLifecycleObserver {
     private val processLifecycleObserverList = mutableListOf<OnProcessLifecycleObserver>()
 
     private val activityDeque: Deque<WeakReference<Activity>> = ArrayDeque()
-    private val sActivityLock = Any()
 
+    @JvmStatic
     fun init(application: Application) {
         this.applicationContext = application.applicationContext
 
@@ -72,21 +73,27 @@ object AppManager : DefaultLifecycleObserver {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
+    @JvmStatic
     val context: Context
         get() = applicationContext
 
+    @JvmStatic
+    val activitiesSize: Int
+        get() {
+            return activityDeque.size
+        }
+
+    @JvmStatic
     val activityList: List<Activity>
         get() {
             val list: MutableList<Activity> = ArrayList()
-            synchronized(sActivityLock) {
-                val iterator = activityDeque.iterator()
-                while (iterator.hasNext()) {
-                    val act = iterator.next().get()
-                    if (act == null) {
-                        iterator.remove()
-                    } else {
-                        list.add(act)
-                    }
+            val iterator = activityDeque.iterator()
+            while (iterator.hasNext()) {
+                val act = iterator.next().get()
+                if (act == null) {
+                    iterator.remove()
+                } else {
+                    list.add(act)
                 }
             }
             return list
@@ -96,96 +103,65 @@ object AppManager : DefaultLifecycleObserver {
      * 添加Activity到堆栈
      * Add the Activity to the stack
      */
-    fun addActivity(activity: Activity) {
-        synchronized(sActivityLock) { activityDeque.offer(WeakReference(activity)) }
-    }
-
-    /**
-     * 获取当前Activity（堆栈中最后一个压入的）
-     * Get the current Activity (the last one pushed in the stack)
-     */
-    fun currentActivity(): Activity? {
-        synchronized(sActivityLock) {
-            val reference = activityDeque.peekLast()
-            return reference?.get()
-        }
-    }
-
-    fun firstActivity(): Activity? {
-        synchronized(sActivityLock) {
-            val reference = activityDeque.peekFirst()
-            return reference?.get()
-        }
-    }
-
-    val stackSize: Int
-        get() {
-            synchronized(sActivityLock) { return activityDeque.size }
-        }
-
-    /**
-     * 结束当前Activity（堆栈中最后一个压入的）
-     * End the current Activity (the last one pushed in the stack)
-     */
-    fun removeCurrentActivity() {
-        synchronized(sActivityLock) { activityDeque.pollLast() }
-    }
-
-    fun finishCurrentActivity() {
-        synchronized(sActivityLock) {
-            val reference = activityDeque.pollLast()
-            if (reference != null) {
-                val activity = reference.get()
-                activity?.finish()
-            }
-        }
+    private fun addActivity(activity: Activity) {
+        activityDeque.offer(WeakReference(activity))
     }
 
     /**
      * 结束指定的Activity
      * End the Activity with the specified class name
      */
-    fun removeActivity(activity: Activity) {
-        synchronized(sActivityLock) {
-            val iterator = activityDeque.descendingIterator()
-            while (iterator.hasNext()) {
-                val act = iterator.next().get()
-                if (act == null || act === activity) {
-                    iterator.remove()
-                }
+    private fun removeActivity(activity: Activity) {
+        val iterator = activityDeque.descendingIterator()
+        while (iterator.hasNext()) {
+            val act = iterator.next().get()
+            if (act == null || act === activity) {
+                iterator.remove()
             }
         }
     }
 
     /**
-     * 结束指定类名的Activity
-     * End the Activity with the specified class name
+     * 获取当前Activity（堆栈中最后一个压入的）
+     * Get the current Activity (the last one pushed in the stack)
      */
-    fun removeActivity(cls: Class<*>) {
-        synchronized(sActivityLock) {
-            val iterator = activityDeque.descendingIterator()
-            while (iterator.hasNext()) {
-                val act = iterator.next().get()
-                if (act == null || act.javaClass == cls) {
-                    iterator.remove()
-                }
-            }
+    @JvmStatic
+    fun currentActivity(): Activity? {
+        val reference = activityDeque.peekLast()
+        return reference?.get()
+    }
+
+    /**
+     * 获取当前栈底的activity
+     */
+    @JvmStatic
+    fun firstActivity(): Activity? {
+        val reference = activityDeque.peekFirst()
+        return reference?.get()
+    }
+
+    @JvmStatic
+    fun finishCurrentActivity() {
+        val reference = activityDeque.pollLast()
+        if (reference != null) {
+            val activity = reference.get()
+            activity?.finish()
         }
     }
+
 
     /**
      * 结束指定类名的Activity
      * End the Activity with the specified class name
      */
+    @JvmStatic
     fun finishActivity(cls: Class<*>) {
-        synchronized(sActivityLock) {
-            val iterator = activityDeque.descendingIterator()
-            while (iterator.hasNext()) {
-                val act = iterator.next().get()
-                if (act == null || act.javaClass == cls) {
-                    iterator.remove()
-                    act?.finish()
-                }
+        val iterator = activityDeque.descendingIterator()
+        while (iterator.hasNext()) {
+            val act = iterator.next().get()
+            if (act == null || act.javaClass == cls) {
+                iterator.remove()
+                act?.finish()
             }
         }
     }
@@ -207,23 +183,24 @@ object AppManager : DefaultLifecycleObserver {
      * The scenario that requires finishAll is generally: the program exits normally (then the manager will finish all the remaining unfinished activities),
      * The program crashes (it is also up to the manager to finish all the remaining unfinished activities).
      */
+    @JvmStatic
     fun finishAllActivity() {
-        synchronized(sActivityLock) {
-            val iterator = activityDeque.descendingIterator()
-            while (iterator.hasNext()) {
-                val act = iterator.next().get()
-                iterator.remove()
-                act?.finish()
-            }
+        val iterator = activityDeque.descendingIterator()
+        while (iterator.hasNext()) {
+            val act = iterator.next().get()
+            iterator.remove()
+            act?.finish()
         }
     }
 
+    @JvmStatic
     fun addOnProcessLifecycleObserver(observer: OnProcessLifecycleObserver) {
         if (!processLifecycleObserverList.contains(observer)) {
             processLifecycleObserverList.add(observer)
         }
     }
 
+    @JvmStatic
     fun removeOnProcessLifecycleObserver(observer: OnProcessLifecycleObserver) {
         processLifecycleObserverList.remove(observer)
     }
