@@ -2,6 +2,7 @@ package com.shencoder.mvvmkitdemo
 
 import android.app.Application
 import com.shencoder.mvvmkit.ext.globalInit
+import com.shencoder.mvvmkitdemo.di.appModule
 import org.koin.android.java.KoinAndroidApplication
 import org.koin.core.logger.Level
 
@@ -21,7 +22,7 @@ class App : Application() {
                     this,
                     if (BuildConfig.DEBUG) Level.ERROR else Level.ERROR
                 )
-                .modules()
+                .modules(appModule)
         globalInit(BuildConfig.DEBUG, "", koinApplication)
     }
 }

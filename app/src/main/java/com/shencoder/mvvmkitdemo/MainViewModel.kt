@@ -6,6 +6,7 @@ import com.shencoder.mvvmkit.base.repository.BaseNothingRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.mvvmkit.ext.launchOnUI
 import com.shencoder.mvvmkit.ext.launchOnUIDelay
+import com.shencoder.mvvmkitdemo.data.MainRepository
 
 /**
  *
@@ -15,8 +16,8 @@ import com.shencoder.mvvmkit.ext.launchOnUIDelay
  */
 class MainViewModel(
     application: Application,
-    repo: BaseNothingRepository
-) : BaseViewModel<BaseNothingRepository>(application, repo) {
+    repo: MainRepository
+) : BaseViewModel<MainRepository>(application, repo) {
     override fun onCreate(owner: LifecycleOwner) {
         launchOnUIDelay(1000L){
 
