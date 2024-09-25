@@ -62,7 +62,6 @@ dependencies {
 
     api rootProject.ext.deps.mmkv
     api rootProject.ext.deps.fragmentation
-    api rootProject.ext.deps.xlog
     api rootProject.ext.deps.toasty
     api rootProject.ext.deps.loadingDialog
 

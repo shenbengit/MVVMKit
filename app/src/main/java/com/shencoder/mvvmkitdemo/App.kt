@@ -1,6 +1,8 @@
 package com.shencoder.mvvmkitdemo
 
 import android.app.Application
+import android.util.Log
+import com.shencoder.mvvmkit.InitEnvironment
 import com.shencoder.mvvmkit.ext.globalInit
 import com.shencoder.mvvmkitdemo.di.appModule
 import org.koin.android.java.KoinAndroidApplication
@@ -16,13 +18,42 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val koinApplication =
-            KoinAndroidApplication
-                .create(
-                    this,
-                    if (BuildConfig.DEBUG) Level.ERROR else Level.ERROR
-                )
-                .modules(appModule)
-        globalInit(BuildConfig.DEBUG, "", koinApplication)
+
+        InitEnvironment.init(this, object : InitEnvironment.ConfigurationEnvironment {
+
+            override val debug: Boolean
+                get() = BuildConfig.DEBUG
+
+            override fun logV(tag: String, msg: () -> Any) {
+                Log.v(tag, msg().toString())
+            }
+
+            override fun logD(tag: String, msg: () -> Any) {
+                if (debug) {
+                    Log.d(tag, msg().toString())
+                }
+            }
+
+            override fun logI(tag: String, msg: () -> Any) {
+                Log.i(tag, msg().toString())
+            }
+
+            override fun logW(tag: String, msg: () -> Any) {
+                Log.w(tag, msg().toString())
+            }
+
+            override fun logE(tag: String, msg: () -> Any) {
+                Log.e(tag, msg().toString())
+            }
+        }) {
+            val koinApplication =
+                KoinAndroidApplication
+                    .create(
+                        this,
+                        if (BuildConfig.DEBUG) Level.ERROR else Level.ERROR
+                    )
+                    .modules(appModule)
+            globalInit(koinApplication)
+        }
     }
 }

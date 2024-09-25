@@ -1,13 +1,9 @@
+@file:JvmName("GlobalInit")
+
 package com.shencoder.mvvmkit.ext
 
-import android.app.Application
-import android.content.Context
 import com.shencoder.mvvmkit.di.appModule
-import com.elvishew.xlog.LogConfiguration
-import com.elvishew.xlog.LogLevel
-import com.elvishew.xlog.XLog
-import com.elvishew.xlog.printer.AndroidPrinter
-import com.shencoder.mvvmkit.network.NetworkObserverManager
+import com.shencoder.mvvmkit.libEnvironment
 import com.shencoder.mvvmkit.util.AppManager
 import com.tencent.mmkv.MMKV
 import com.tencent.mmkv.MMKVLogLevel
@@ -26,46 +22,15 @@ import org.koin.core.context.startKoin
 /**
  * 快速一键初始化
  *
- * @param debug debug
- * @param tag 打印日志的TAG
  * @param koinApplication
  */
-fun Context.globalInit(debug: Boolean, tag: String, koinApplication: KoinApplication) {
-    (applicationContext as Application).initAppManager()
-
-    initLogger(tag, 2, if (debug) LogLevel.ALL else LogLevel.NONE)
+fun globalInit(koinApplication: KoinApplication) {
     initToasty()
-    initMMKV(if (debug) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelNone)
-    initFragmentation(debug)
+    initMMKV()
+    initFragmentation()
     initKoin(koinApplication)
 }
 
-fun Application.initAppManager() {
-    AppManager.init(this)
-    NetworkObserverManager.getInstance().init(this)
-}
-
-
-/**
- * 初始化Logger
- * 可自行初始化
- * You can initialize it yourself
- *
- * @param tag tag
- * @param depth the number of stack trace elements we should log, 0 if no limitation
- * @param logLevel the log level
- */
-fun initLogger(tag: String, depth: Int = 2, logLevel: Int = LogLevel.NONE) {
-    val build = LogConfiguration.Builder()
-        .enableStackTrace(depth)
-        .logLevel(logLevel)
-        .enableThreadInfo()
-        .enableBorder()
-        .tag(tag)
-        .build()
-    val androidPrinter = AndroidPrinter(true)
-    XLog.init(build, androidPrinter)
-}
 
 /**
  * 初始化Toasty
@@ -84,14 +49,14 @@ fun initToasty(allowQueue: Boolean = true) {
  * 可自行初始化
  * You can initialize it yourself
  */
-fun Context.initMMKV(
-    logLevel: MMKVLogLevel = MMKVLogLevel.LevelNone,
+fun initMMKV(
+    logLevel: MMKVLogLevel = if (libEnvironment.debug) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelNone,
     mmkvPath: String? = null
 ) {
     if (mmkvPath.isNullOrBlank()) {
-        MMKV.initialize(this, logLevel)
+        MMKV.initialize(AppManager.context, logLevel)
     } else {
-        MMKV.initialize(this, mmkvPath, logLevel)
+        MMKV.initialize(AppManager.context, mmkvPath, logLevel)
     }
 }
 
@@ -99,17 +64,19 @@ fun Context.initMMKV(
  * 初始化Fragmentation
  * 可自行初始化
  * You can initialize it yourself
+ *
+ * @param stackViewMode [Fragmentation.NONE] [Fragmentation.SHAKE] [Fragmentation.BUBBLE]
  */
 fun initFragmentation(
-    debug: Boolean = false,
+    stackViewMode: Int = if (libEnvironment.debug) Fragmentation.BUBBLE else Fragmentation.NONE,
     targetFragmentEnter: Int = 0,
     currentFragmentPopExit: Int = 0,
     currentFragmentPopEnter: Int = 0,
     targetFragmentExit: Int = 0
 ) {
     Fragmentation.builder()
-        .debug(debug)
-        .stackViewMode(if (debug) Fragmentation.BUBBLE else Fragmentation.NONE)
+        .debug(libEnvironment.debug)
+        .stackViewMode(stackViewMode)
         .animation(
             targetFragmentEnter,
             currentFragmentPopExit,

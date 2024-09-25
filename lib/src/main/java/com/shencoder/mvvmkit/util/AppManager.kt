@@ -7,8 +7,8 @@ import android.os.Bundle
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.elvishew.xlog.XLog
 import com.shencoder.mvvmkit.ext.DefaultActivityLifecycleCallbacks
+import com.shencoder.mvvmkit.ext.logI
 import java.lang.ref.WeakReference
 import java.util.ArrayDeque
 import java.util.Deque
@@ -23,6 +23,9 @@ import java.util.Deque
  * Adapts only to the main process
  */
 object AppManager : DefaultLifecycleObserver {
+
+    private const val TAG = "AppManager"
+
     private lateinit var applicationContext: Context
 
     /**
@@ -44,28 +47,29 @@ object AppManager : DefaultLifecycleObserver {
             DefaultActivityLifecycleCallbacks() {
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                XLog.i("AppManager->onActivityCreated: ${activity::class.java.simpleName}")
+                logI(TAG) { "onActivityCreated: ${activity::class.java.simpleName}" }
+
                 addActivity(activity)
             }
 
             override fun onActivityStarted(activity: Activity) {
-                XLog.i("AppManager->onActivityStarted: ${activity::class.java.simpleName}")
+                logI(TAG) { "onActivityStarted: ${activity::class.java.simpleName}" }
             }
 
             override fun onActivityResumed(activity: Activity) {
-                XLog.i("AppManager->onActivityResumed: ${activity::class.java.simpleName}")
+                logI(TAG) { "onActivityResumed: ${activity::class.java.simpleName}" }
             }
 
             override fun onActivityPaused(activity: Activity) {
-                XLog.i("AppManager->onActivityPaused: ${activity::class.java.simpleName}")
+                logI(TAG) { "onActivityPaused: ${activity::class.java.simpleName}" }
             }
 
             override fun onActivityStopped(activity: Activity) {
-                XLog.i("AppManager->onActivityStopped: ${activity::class.java.simpleName}")
+                logI(TAG) { "onActivityStopped: ${activity::class.java.simpleName}" }
             }
 
             override fun onActivityDestroyed(activity: Activity) {
-                XLog.i("AppManager->onActivityDestroyed: ${activity::class.java.simpleName}")
+                logI(TAG) { "onActivityDestroyed: ${activity::class.java.simpleName}" }
                 removeActivity(activity)
             }
         })
@@ -206,13 +210,13 @@ object AppManager : DefaultLifecycleObserver {
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        XLog.i("AppManager-> onForeground")
+        logI(TAG) { "onForeground" }
         _isAppForeground = true
         processLifecycleObserverList.forEach { it.onForeground() }
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        XLog.i("AppManager-> onBackground")
+        logI(TAG) { "onBackground" }
         _isAppForeground = false
         processLifecycleObserverList.forEach { it.onBackground() }
     }

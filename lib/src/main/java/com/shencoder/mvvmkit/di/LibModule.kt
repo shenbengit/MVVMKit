@@ -20,7 +20,6 @@ private val defaultModule = module {
 }
 
 private val singleModule = module {
-    single { MMKV.defaultMMKV() }
     single { DownloadRetrofitClient() }
 }
 

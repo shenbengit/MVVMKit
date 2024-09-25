@@ -13,7 +13,7 @@ import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
-import com.elvishew.xlog.XLog
+import com.shencoder.mvvmkit.ext.logE
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -29,12 +29,11 @@ object ImageUtils {
         return try {
             Glide.with(this)
         } catch (t: Throwable) {
-            XLog.e(
-                TAG,
+            logE(TAG) {
                 "Unable to obtain a request manager for a FragmentActivity, error: ${
                     t.stackTraceToString()
                 }."
-            )
+            }
             null
         }
     }
@@ -43,10 +42,9 @@ object ImageUtils {
         return try {
             Glide.with(this)
         } catch (t: Throwable) {
-            XLog.e(
-                TAG,
+            logE(TAG) {
                 "Unable to obtain a request manager for a Fragment, error: ${t.stackTraceToString()}."
-            )
+            }
             null
         }
     }
@@ -55,10 +53,9 @@ object ImageUtils {
         return try {
             Glide.with(this)
         } catch (t: Throwable) {
-            XLog.e(
-                TAG,
+            logE(TAG) {
                 "Unable to obtain a request manager for a Context, error: ${t.stackTraceToString()}."
-            )
+            }
             null
         }
     }
@@ -70,10 +67,9 @@ object ImageUtils {
         return try {
             Glide.with(this)
         } catch (t: Throwable) {
-            XLog.e(
-                TAG,
+            logE(TAG) {
                 "Unable to obtain a request manager for a ImageView, error: ${t.stackTraceToString()}."
-            )
+            }
             null
         }
     }

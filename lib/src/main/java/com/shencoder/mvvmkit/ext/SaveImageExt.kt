@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import com.elvishew.xlog.XLog
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
@@ -34,7 +33,7 @@ private class OutputFileTaker(var file: File? = null)
 @JvmOverloads
 fun File.copyToAlbum(context: Context, fileName: String, relativePath: String? = null): Uri? {
     if (!this.canRead() || !this.exists()) {
-        XLog.w(TAG, "check: read file error: $this")
+        logW(TAG) { "check: read file error: $this" }
         return null
     }
     return this.inputStream().use {
@@ -59,7 +58,7 @@ fun InputStream.saveToAlbum(
     val outputFile = OutputFileTaker()
     val imageUri = resolver.insertMediaImage(fileName, relativePath, outputFile)
     if (imageUri == null) {
-        XLog.w(TAG, "insert: error: uri == null")
+        logW(TAG) { "insert: error: uri == null" }
         return null
     }
 
@@ -93,7 +92,7 @@ fun Bitmap.saveToAlbum(
     val outputFile = OutputFileTaker()
     val imageUri = resolver.insertMediaImage(fileName, relativePath, outputFile)
     if (imageUri == null) {
-        XLog.w(TAG, "insert: error: uri == null")
+        logW(TAG) { "insert: error: uri == null" }
         return null
     }
 
@@ -110,7 +109,7 @@ private fun Uri.outputStream(resolver: ContentResolver): OutputStream? {
     return try {
         resolver.openOutputStream(this)
     } catch (e: FileNotFoundException) {
-        XLog.e(TAG, "save: open stream error: $e")
+        logE(TAG) { "save: open stream error: $e" }
         null
     }
 }
@@ -194,7 +193,7 @@ private fun ContentResolver.insertMediaImage(
         val saveDir = if (relativePath != null) File(pictures, relativePath) else pictures
 
         if (!saveDir.exists() && !saveDir.mkdirs()) {
-            XLog.e(TAG, "save: error: can't create Pictures directory")
+            logE(TAG) { "save: error: can't create Pictures directory" }
             return null
         }
 
