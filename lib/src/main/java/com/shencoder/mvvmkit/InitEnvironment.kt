@@ -3,6 +3,7 @@ package com.shencoder.mvvmkit
 import android.app.Application
 import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.shencoder.mvvmkit.util.AppManager
+import com.tencent.mmkv.MMKV
 
 
 /**
@@ -13,7 +14,7 @@ import com.shencoder.mvvmkit.util.AppManager
  * @since
  */
 
-internal val libEnvironment: InitEnvironment.ConfigurationEnvironment
+internal inline val libEnvironment: InitEnvironment.ConfigurationEnvironment
     get() {
         return InitEnvironment.environment
     }
@@ -55,6 +56,20 @@ object InitEnvironment {
     interface ConfigurationEnvironment {
 
         val debug: Boolean
+
+        /**
+         * mmkv mode
+         * [MMKV.SINGLE_PROCESS_MODE] 单进程模式
+         * [MMKV.MULTI_PROCESS_MODE] 多进程模式
+         */
+        val mmkvMode: Int
+            get() = MMKV.SINGLE_PROCESS_MODE
+
+        /**
+         * mmkv 加密
+         */
+        val mmkvCryptKey: String?
+            get() = null
 
         fun logV(tag: String, msg: () -> Any)
 

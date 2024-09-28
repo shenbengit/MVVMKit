@@ -6,7 +6,9 @@ import com.shencoder.mvvmkit.di.appModule
 import com.shencoder.mvvmkit.libEnvironment
 import com.shencoder.mvvmkit.util.AppManager
 import com.tencent.mmkv.MMKV
+import com.tencent.mmkv.MMKVHandler
 import com.tencent.mmkv.MMKVLogLevel
+import com.tencent.mmkv.MMKVRecoverStrategic
 import com.weikaiyun.fragmentation.Fragmentation
 import es.dmoral.toasty.Toasty
 import org.koin.core.KoinApplication
@@ -37,6 +39,7 @@ fun globalInit(koinApplication: KoinApplication) {
  * 可自行初始化
  * You can initialize it yourself
  */
+@JvmOverloads
 fun initToasty(allowQueue: Boolean = true) {
     Toasty.Config
         .getInstance()
@@ -49,15 +52,60 @@ fun initToasty(allowQueue: Boolean = true) {
  * 可自行初始化
  * You can initialize it yourself
  */
+@JvmOverloads
 fun initMMKV(
-    logLevel: MMKVLogLevel = if (libEnvironment.debug) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelNone,
-    mmkvPath: String? = null
+    logLevel: MMKVLogLevel = if (libEnvironment.debug) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelWarning,
+    mmkvPath: String = /*mmkv 默认地址*/AppManager.context.filesDir.absolutePath + "/mmkv",
+    libLoader: MMKV.LibLoader? = null,
+    handler: MMKVHandler? = null
 ) {
-    if (mmkvPath.isNullOrBlank()) {
-        MMKV.initialize(AppManager.context, logLevel)
-    } else {
-        MMKV.initialize(AppManager.context, mmkvPath, logLevel)
+    val mmkvHandler = handler ?: object : MMKVHandler {
+        val TAG = "MMKV"
+        override fun onMMKVCRCCheckFail(mmapID: String?): MMKVRecoverStrategic {
+            return MMKVRecoverStrategic.OnErrorDiscard
+        }
+
+        override fun onMMKVFileLengthError(mmapID: String?): MMKVRecoverStrategic {
+            return MMKVRecoverStrategic.OnErrorDiscard
+        }
+
+        override fun wantLogRedirecting(): Boolean {
+            return true
+        }
+
+        override fun mmkvLog(
+            level: MMKVLogLevel,
+            file: String?,
+            line: Int,
+            function: String?,
+            message: String?
+        ) {
+            val msg = { "<$file:$line::$function> $message" }
+            when (level) {
+                MMKVLogLevel.LevelDebug -> {
+                    logD(TAG, msg)
+                }
+
+                MMKVLogLevel.LevelInfo -> {
+                    logI(TAG, msg)
+                }
+
+                MMKVLogLevel.LevelWarning -> {
+                    logW(TAG, msg)
+                }
+
+                MMKVLogLevel.LevelError -> {
+                    logE(TAG, msg)
+                }
+
+                MMKVLogLevel.LevelNone -> {
+//                    logV(TAG) { msg }
+                }
+            }
+        }
     }
+
+    MMKV.initialize(AppManager.context, mmkvPath, libLoader, logLevel, mmkvHandler)
 }
 
 /**
@@ -67,6 +115,7 @@ fun initMMKV(
  *
  * @param stackViewMode [Fragmentation.NONE] [Fragmentation.SHAKE] [Fragmentation.BUBBLE]
  */
+@JvmOverloads
 fun initFragmentation(
     stackViewMode: Int = if (libEnvironment.debug) Fragmentation.BUBBLE else Fragmentation.NONE,
     targetFragmentEnter: Int = 0,

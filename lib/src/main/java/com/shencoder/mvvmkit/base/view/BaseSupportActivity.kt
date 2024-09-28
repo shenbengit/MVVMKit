@@ -1,7 +1,6 @@
 package com.shencoder.mvvmkit.base.view
 
 import android.app.Dialog
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -9,9 +8,7 @@ import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
 import com.shencoder.mvvmkit.network.NetworkObserverManager
-import com.tencent.mmkv.MMKV
 import com.weikaiyun.fragmentation.SupportActivity
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -35,11 +32,6 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     protected lateinit var mViewModel: VM
     private lateinit var mLoadingDialog: Dialog
-
-    /**
-     * 代替[SharedPreferences]
-     */
-    protected val mmkv: MMKV by inject()
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

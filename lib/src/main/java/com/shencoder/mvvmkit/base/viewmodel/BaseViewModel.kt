@@ -3,7 +3,6 @@ package com.shencoder.mvvmkit.base.viewmodel
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -16,9 +15,8 @@ import androidx.lifecycle.MutableLiveData
 import com.shencoder.mvvmkit.R
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.ext.isOnMainThread
-import com.tencent.mmkv.MMKV
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+
 
 /**
  * 如果不需要ViewModel处理逻辑，则可以使用[DefaultViewModel]代替
@@ -54,11 +52,6 @@ abstract class BaseViewModel<REPOSITORY : IRepository>(
             this@BaseViewModel.handleMessage(msg)
         }
     }
-
-    /**
-     * 代替[SharedPreferences]
-     */
-    protected val mmkv: MMKV by inject()
 
     /**
      * 不对外暴露[MutableLiveData]
