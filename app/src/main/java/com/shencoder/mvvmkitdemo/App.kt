@@ -4,6 +4,10 @@ import android.app.Application
 import android.util.Log
 import com.shencoder.mvvmkit.InitEnvironment
 import com.shencoder.mvvmkit.ext.globalInit
+import com.shencoder.mvvmkit.ext.initFragmentation
+import com.shencoder.mvvmkit.ext.initKoin
+import com.shencoder.mvvmkit.ext.initMMKV
+import com.shencoder.mvvmkit.ext.initToasty
 import com.shencoder.mvvmkitdemo.di.appModule
 import org.koin.android.java.KoinAndroidApplication
 import org.koin.core.logger.Level
@@ -23,6 +27,12 @@ class App : Application() {
 
             override val debug: Boolean
                 get() = BuildConfig.DEBUG
+
+            override val mmkvMode: Int
+                get() = super.mmkvMode
+
+            override val mmkvCryptKey: String?
+                get() = super.mmkvCryptKey
 
             override fun logV(tag: String, msg: () -> Any) {
                 Log.v(tag, msg().toString())
@@ -54,6 +64,11 @@ class App : Application() {
                     )
                     .modules(appModule)
             globalInit(koinApplication)
+
+//            initToasty()
+//            initMMKV()
+//            initFragmentation()
+//            initKoin(koinApplication)
         }
     }
 }

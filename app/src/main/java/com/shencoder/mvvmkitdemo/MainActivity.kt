@@ -2,11 +2,15 @@ package com.shencoder.mvvmkitdemo
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
+import com.shencoder.mvvmkit.ext.logI
 import com.shencoder.mvvmkit.util.MoshiUtils
 import com.shencoder.mvvmkit.util.NullSafeMoshiUtils
 import com.shencoder.mvvmkit.util.base64ToByteArray
+import com.shencoder.mvvmkit.util.mmkv.asLiveData
+import com.shencoder.mvvmkit.util.mmkv.globalMmkv
+import com.shencoder.mvvmkit.util.mmkv.mmkv
+import com.shencoder.mvvmkit.util.mmkv.mmkvString
 import com.shencoder.mvvmkit.util.toBase64
 import com.shencoder.mvvmkitdemo.databinding.ActivityMainBinding
 import com.squareup.moshi.Moshi
@@ -46,13 +50,27 @@ class MainActivity : BaseSupportActivity<MainViewModel, ActivityMainBinding>() {
         val adapter = moshi.adapter<List<Bean>>(types)
         val json = MoshiUtils.toJson(list)
         val toJson = MoshiUtils.toJson(Bean("asdasd", 123123))
-        Log.i(TAG, "initView: $toJson, map: ${MoshiUtils.fromJsonToMap<Any>(toJson)}")
+        logI(TAG, "initView: $toJson, map: ${MoshiUtils.fromJsonToMap<Any>(toJson)}")
 
 
         val toList1 = MoshiUtils.fromJsonToList<Bean>(json)
         val toList2 = NullSafeMoshiUtils.fromJsonToList(json, Bean::class.java)
-        Log.i(TAG, "initView: $toList1")
-        Log.i(TAG, "initView: $toList2")
+        logI(TAG, "initView: $toList1")
+        logI(TAG, "initView: $toList2")
+
+        mmkv.encode("AAA", "123")
+        globalMmkv.encode("BBB", "456")
+        logI(TAG, "initView: mmkv: ${mmkv.decodeString("AAA")}")
+        logI(
+            TAG,
+            "initView: globalMmkv: ${globalMmkv.decodeString("BBB")}, ${globalMmkv.decodeString("BBB1")}"
+        )
+        val adc by mmkvString().asLiveData()
+        adc.observe(this){
+            logI(TAG, "initView: mmkv: adc $it")
+        }
+//        adc = "123123"
+        logI(TAG, "initView: mmkv: adc $adc")
     }
 
 
