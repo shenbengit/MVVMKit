@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 
 private val mainModule = module {
-    factory { MainRemoteDataSource() }
+    factory { MainRemoteDataSource(get()) }
     factoryOf(::MainRepository)
     viewModelOf(::MainViewModel)
 }

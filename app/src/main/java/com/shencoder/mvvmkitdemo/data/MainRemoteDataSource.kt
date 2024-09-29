@@ -1,6 +1,7 @@
 package com.shencoder.mvvmkitdemo.data
 
 import com.shencoder.mvvmkit.base.repository.IRemoteDataSource
+import com.shencoder.mvvmkitdemo.http.RetrofitClient
 
 
 /**
@@ -10,6 +11,8 @@ import com.shencoder.mvvmkit.base.repository.IRemoteDataSource
  * @description
  * @since
  */
-class MainRemoteDataSource : IRemoteDataSource {
+class MainRemoteDataSource(private val retrofitClient: RetrofitClient) : IRemoteDataSource {
+
+    suspend fun searchUsers(user: String) = retrofitClient.getApiService().searchUsers(user)
 
 }

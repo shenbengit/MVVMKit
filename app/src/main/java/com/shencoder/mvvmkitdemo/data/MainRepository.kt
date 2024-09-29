@@ -13,4 +13,5 @@ import com.shencoder.mvvmkit.base.repository.BaseRemoteRepository
 class MainRepository(remoteDataSource: MainRemoteDataSource) :
     BaseRemoteRepository<MainRemoteDataSource>(remoteDataSource) {
 
+    suspend fun searchUsers(user: String) = remoteDataSource.searchUsers(user)
 }

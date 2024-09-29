@@ -2,6 +2,7 @@ package com.shencoder.mvvmkitdemo
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import androidx.recyclerview.widget.RecyclerView
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
 import com.shencoder.mvvmkit.ext.logI
 import com.shencoder.mvvmkit.util.MoshiUtils
