@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 fun <T> CoroutineScope.httpRequest(
     block: suspend CoroutineScope.() -> BaseResponse<T>,
-    onSuccess: (ResultStatus.Success<T?>) -> Unit = {},
+    onSuccess: (ResultStatus.Success<T>) -> Unit = {},
     onFailure: (ResultStatus.Failure) -> Unit = {},
     onError: (ResultStatus.Error) -> Unit = {},
     onComplete: () -> Unit = {}
@@ -45,7 +45,7 @@ fun <T> CoroutineScope.httpRequest(
 
 fun <T> CoroutineScope.request(
     block: suspend CoroutineScope.() -> T,
-    onSuccess: (ResultStatus.Success<T?>) -> Unit = {},
+    onSuccess: (ResultStatus.Success<T>) -> Unit = {},
     onError: (ResultStatus.Error) -> Unit = {},
     onComplete: () -> Unit = {}
 ) = launch(Dispatchers.Main) {

@@ -44,7 +44,7 @@ fun BaseViewModel<*>.launchOnUIDelay(delayMillis: Long, function: () -> Unit) = 
  */
 fun <T> BaseViewModel<*>.httpRequest(
     block: suspend CoroutineScope.() -> BaseResponse<T>,
-    onSuccess: (ResultStatus.Success<T?>) -> Unit = {},
+    onSuccess: (ResultStatus.Success<T>) -> Unit = {},
     onFailure: (ResultStatus.Failure) -> Unit = {},
     onError: (ResultStatus.Error) -> Unit = {},
     isShowLoadingDialog: Boolean = true,
@@ -85,7 +85,7 @@ fun <T> BaseViewModel<*>.httpRequest(
  */
 fun <T> BaseViewModel<*>.request(
     block: suspend CoroutineScope.() -> T,
-    onSuccess: (ResultStatus.Success<T?>) -> Unit = {},
+    onSuccess: (ResultStatus.Success<T>) -> Unit = {},
     onError: (ResultStatus.Error) -> Unit = {},
     isShowLoadingDialog: Boolean = true,
     onComplete: () -> Unit = {}

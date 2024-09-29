@@ -218,11 +218,16 @@ class HttpLoggerInterceptor @JvmOverloads constructor(
                     }
                 }
             }
-            logBuilder.appendLine("Request Headers: {")
-            for (i in 0 until headers.size) {
-                logHeader(logBuilder, headers, i)
+            logBuilder.append("Request Headers: ")
+            if (headers.size > 0) {
+                logBuilder.appendLine("{")
+                for (i in 0 until headers.size) {
+                    logHeader(logBuilder, headers, i)
+                }
+                logBuilder.appendLine("}")
+            } else {
+                logBuilder.appendLine()
             }
-            logBuilder.appendLine("}")
 
             if (!logBody || requestBody == null) {
                 logBuilder.appendLine("--> END ${request.method}")
@@ -275,11 +280,16 @@ class HttpLoggerInterceptor @JvmOverloads constructor(
 
         if (logHeaders) {
             val headers = response.headers
-            logBuilder.appendLine("Response Headers: {")
-            for (i in 0 until headers.size) {
-                logHeader(logBuilder, headers, i)
+            logBuilder.append("Response Headers: ")
+            if (headers.size > 0) {
+                logBuilder.appendLine("{")
+                for (i in 0 until headers.size) {
+                    logHeader(logBuilder, headers, i)
+                }
+                logBuilder.appendLine("}")
+            } else {
+                logBuilder.appendLine()
             }
-            logBuilder.appendLine("}")
 
             if (!logBody || !response.promisesBody()) {
                 logBuilder.appendLine("<-- END HTTP")
