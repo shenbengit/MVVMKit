@@ -16,8 +16,7 @@ import com.shencoder.loadingdialog.LoadingDialog
 import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.weikaiyun.fragmentation.SupportFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedStateViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 /**
  *
@@ -74,8 +73,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     /**
      * 注入ViewModel
      * @see [viewModel]
-     * @see [sharedViewModel]
-     * @see [sharedStateViewModel]
+     * @see [activityViewModel]
      */
     protected abstract fun injectViewModel(): Lazy<VM>
 
