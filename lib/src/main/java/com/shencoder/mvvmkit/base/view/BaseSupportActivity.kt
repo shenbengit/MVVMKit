@@ -7,9 +7,14 @@ import androidx.databinding.ViewDataBinding
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
+import com.shencoder.mvvmkit.ext.inflateBinding
 import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.weikaiyun.fragmentation.SupportActivity
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.fragment.android.setupKoinFragmentFactory
+import org.koin.androidx.scope.activityScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.scope.Scope
 
 /**
  *
@@ -18,7 +23,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * @email   714081644@qq.com
  */
 abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : ViewDataBinding> :
-    SupportActivity(), NetworkObserverManager.Listener {
+    SupportActivity(), NetworkObserverManager.Listener, AndroidScopeComponent,
+    IViewDataBinding<VDB> {
 
     protected val TAG = javaClass.simpleName
 
@@ -33,10 +39,18 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     protected lateinit var mViewModel: VM
     private lateinit var mLoadingDialog: Dialog
 
+    override val scope: Scope by activityScope()
+
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         beforeCreateView()
-        _binding = DataBindingUtil.setContentView(this, getLayoutId())
+        val layoutId = getLayoutId()
+        _binding = if (layoutId == 0) {
+            inflateBinding(layoutInflater)
+        } else {
+            DataBindingUtil.setContentView(this, getLayoutId())
+        }
+        setContentView(mBinding.root)
         init()
         initView()
         initData(savedInstanceState)
@@ -57,8 +71,9 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     /**
      * 布局id
+     * @return 0:使用反射获取
      */
-    protected abstract fun getLayoutId(): Int
+    protected open fun getLayoutId(): Int = 0
 
     /**
      * 注入ViewModel
@@ -76,6 +91,8 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     protected abstract fun initData(savedInstanceState: Bundle?)
 
     private fun init() {
+        setupKoinFragmentFactory(scope)
+
         mViewModel = injectViewModel().value
         mBinding.setVariable(getViewModelId(), mViewModel)
         lifecycle.addObserver(mViewModel)
@@ -146,6 +163,10 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
      * @param isOnline
      */
     override fun onConnectivityChange(isOnline: Boolean) {
+
+    }
+
+    override fun onCloseScope() {
 
     }
 }

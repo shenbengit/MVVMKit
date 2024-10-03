@@ -13,10 +13,14 @@ import androidx.lifecycle.ViewModel
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.base.viewmodel.BaseViewModel
 import com.shencoder.loadingdialog.LoadingDialog
+import com.shencoder.mvvmkit.ext.inflateBinding
 import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.weikaiyun.fragmentation.SupportFragment
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.core.scope.Scope
 
 /**
  *
@@ -25,7 +29,8 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
  * @email   714081644@qq.com
  */
 abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : ViewDataBinding> :
-    SupportFragment(), NetworkObserverManager.Listener {
+    SupportFragment(), NetworkObserverManager.Listener, AndroidScopeComponent,
+    IViewDataBinding<VDB> {
 
     protected val TAG = javaClass.simpleName
 
@@ -40,12 +45,19 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     protected lateinit var mViewModel: VM
     private lateinit var mLoadingDialog: Dialog
 
+    override val scope: Scope by fragmentScope()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+        val layoutId = getLayoutId()
+        _binding = if (layoutId == 0) {
+            inflateBinding(inflater, container)
+        } else {
+            DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+        }
         return mBinding.root
     }
 
@@ -67,8 +79,9 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     /**
      * 布局id
+     * @return 0:使用反射获取
      */
-    protected abstract fun getLayoutId(): Int
+    protected open fun getLayoutId(): Int = 0
 
     /**
      * 注入ViewModel
@@ -161,6 +174,10 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
      * @param isOnline
      */
     override fun onConnectivityChange(isOnline: Boolean) {
+
+    }
+
+    override fun onCloseScope() {
 
     }
 }

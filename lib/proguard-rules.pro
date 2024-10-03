@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# fix R8.fullMode
+-keep class com.shencoder.mvvmkit.base.view.BaseSupportActivity
+-keep class com.shencoder.mvvmkit.base.view.BaseSupportFragment
+-keep class * extends androidx.databinding.ViewDataBinding
+-keepclassmembers class * extends androidx.databinding.ViewDataBinding {
+  public static <methods>;
+}
