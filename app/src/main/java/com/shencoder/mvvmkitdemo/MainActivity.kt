@@ -2,7 +2,6 @@ package com.shencoder.mvvmkitdemo
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
 import com.shencoder.mvvmkit.ext.logI
 import com.shencoder.mvvmkit.util.MoshiUtils
@@ -22,19 +21,24 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseSupportActivity<MainViewModel, ActivityMainBinding>() {
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_main
-    }
+//    override fun getLayoutId(): Int {
+//        return R.layout.activity_main
+//    }
 
     override fun injectViewModel(): Lazy<MainViewModel> {
         return viewModel()
     }
 
     override fun getViewModelId(): Int {
-        return 0
+        return BR.viewModel
     }
 
     override fun initView() {
+        val fragment = findFragment(TestFragment::class.java)
+        if (fragment == null) {
+            loadRootFragment(R.id.flRoot, TestFragment.newInstance())
+        }
+
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_test_bg)
         val base64 = bitmap.toBase64()
         val bytes = base64.base64ToByteArray()
@@ -67,7 +71,7 @@ class MainActivity : BaseSupportActivity<MainViewModel, ActivityMainBinding>() {
             "initView: globalMmkv: ${globalMmkv.decodeString("BBB")}, ${globalMmkv.decodeString("BBB1")}"
         )
         val adc by mmkvString().asLiveData()
-        adc.observe(this){
+        adc.observe(this) {
             logI(TAG, "initView: mmkv: adc $it")
         }
 //        adc = "123123"

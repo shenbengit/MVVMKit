@@ -6,6 +6,10 @@
     <data>
 
         <import type="com.shencoder.mvvmkitdemo.R" />
+
+        <variable
+            name="viewModel"
+            type="com.shencoder.mvvmkitdemo.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,15 +20,24 @@
         <ImageView
             android:id="@+id/iv"
             isBlur="@{true}"
-            isGrayscale="@{true}"
             isCircle="@{true}"
+            isGrayscale="@{true}"
             loadImageData="@{R.drawable.ic_test_bg}"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/flRoot"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
