@@ -3,13 +3,13 @@ package com.shencoder.mvvmkitdemo
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
+import com.shencoder.mvvmkit.ext.base64ToByteArray
 import com.shencoder.mvvmkit.ext.logI
 import com.shencoder.mvvmkit.ext.startActivity
 import com.shencoder.mvvmkit.ext.uiPostDelayed
 import com.shencoder.mvvmkit.util.AppUtils
 import com.shencoder.mvvmkit.util.MoshiUtils
 import com.shencoder.mvvmkit.util.NullSafeMoshiUtils
-import com.shencoder.mvvmkit.util.base64ToByteArray
 import com.shencoder.mvvmkit.util.mmkv.asLiveData
 import com.shencoder.mvvmkit.util.mmkv.globalMmkv
 import com.shencoder.mvvmkit.util.mmkv.mmkv
