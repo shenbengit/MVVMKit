@@ -2,7 +2,8 @@ package com.shencoder.mvvmkit.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Base64
+import com.shencoder.mvvmkit.ext.base64ToByteArray
+import com.shencoder.mvvmkit.ext.base64ToString
 import java.io.ByteArrayOutputStream
 
 /**
@@ -18,16 +19,10 @@ import java.io.ByteArrayOutputStream
 fun Bitmap.toBase64(quality: Int = 100): String {
     return ByteArrayOutputStream().use {
         compress(Bitmap.CompressFormat.JPEG, quality, it)
-        Base64.encodeToString(it.toByteArray(), Base64.DEFAULT)
+        it.toByteArray().base64ToString()
     }
 }
 
-/**
- * base64转ByteArray
- */
-fun String.base64ToByteArray(flag: Int = Base64.DEFAULT): ByteArray {
-    return Base64.decode(this, flag)
-}
 
 /**
  * base64转Bitmap

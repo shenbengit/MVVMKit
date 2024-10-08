@@ -58,7 +58,6 @@ ext {
             'toasty'               : 'com.github.GrenderG:Toasty:1.5.2',
             'loadingDialog'        : 'com.github.shenbengit:LoadingDialog:1.0.6',
             'glide_transformations': 'jp.wasabeef:glide-transformations:4.3.0',
-            'commons_codec'        : 'commons-codec:commons-codec:1.17.1',
 
             'xcrash'               : 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0',
     ]

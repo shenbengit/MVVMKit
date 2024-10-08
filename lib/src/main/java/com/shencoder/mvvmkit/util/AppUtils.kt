@@ -9,14 +9,13 @@ import android.content.pm.SigningInfo
 import android.os.Build
 import android.os.Process
 import android.provider.Settings
-import jp.wasabeef.glide.transformations.internal.Utils
-import org.apache.commons.codec.binary.Hex
-import org.apache.commons.codec.digest.DigestUtils
+import com.shencoder.mvvmkit.util.codec.binary.Hex
+import com.shencoder.mvvmkit.util.codec.digest.DigestUtils
 import kotlin.system.exitProcess
 
 
 /**
- * @see org.apache.commons 依赖下的工具类
+ * @see com.shencoder.mvvmkit.util.codec 依赖下的工具类
  *
  * @author Shenben
  * @date 2024/10/8 11:22

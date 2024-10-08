@@ -1,5 +1,7 @@
 package com.shencoder.mvvmkit.http
 
+import com.shencoder.mvvmkit.util.codec.binary.Hex
+import com.shencoder.mvvmkit.util.codec.digest.DigestUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -8,8 +10,6 @@ import okio.BufferedSink
 import okio.BufferedSource
 import okio.buffer
 import okio.sink
-import org.apache.commons.codec.binary.Hex
-import org.apache.commons.codec.digest.DigestUtils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
