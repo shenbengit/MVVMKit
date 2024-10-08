@@ -118,7 +118,7 @@ open class DownloadFile(
                 // 校验md5
                 fileMd5 = String(Hex.encodeHex(DigestUtils.md5(file.inputStream())))
             }
-            emit(DownloadStatus.DownloadSuccess(file, fileMd5, fileMd5 == md5))
+            emit(DownloadStatus.DownloadSuccess(file, fileMd5, fileMd5.equals(md5, true)))
         } catch (t: Throwable) {
             emit(DownloadStatus.DownloadError(t))
         } finally {

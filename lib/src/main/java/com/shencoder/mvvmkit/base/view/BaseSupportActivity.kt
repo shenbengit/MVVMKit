@@ -26,18 +26,18 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     SupportActivity(), NetworkObserverManager.Listener, AndroidScopeComponent,
     IViewDataBinding<VDB> {
 
-    protected val TAG = javaClass.simpleName
+    protected val TAG by lazy { this.javaClass.simpleName }
 
     private var _binding: VDB? = null
 
     /**
      * 仅在[onCreate]->[onDestroy]之间有效，不可在其他生命周期之外调用
      */
-    protected val mBinding: VDB
+    protected val binding: VDB
         get() = _binding!!
 
-    protected lateinit var mViewModel: VM
-    private lateinit var mLoadingDialog: Dialog
+    protected lateinit var viewModel: VM
+    private lateinit var loadingDialog: Dialog
 
     override val scope: Scope by activityScope()
 
@@ -46,11 +46,10 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
         beforeCreateView()
         val layoutId = getLayoutId()
         _binding = if (layoutId == 0) {
-            inflateBinding(layoutInflater)
+            inflateBinding<VDB>(layoutInflater).also { setContentView(it.root) }
         } else {
-            DataBindingUtil.setContentView(this, getLayoutId())
+            DataBindingUtil.setContentView(this, layoutId)
         }
-        setContentView(mBinding.root)
         init()
         initView()
         initData(savedInstanceState)
@@ -59,7 +58,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     override fun onDestroy() {
         dismissLoadingDialog()
         super.onDestroy()
-        lifecycle.removeObserver(mViewModel)
+        lifecycle.removeObserver(viewModel)
         _binding?.unbind()
         _binding = null
         NetworkObserverManager.getInstance().removeListener(this)
@@ -93,12 +92,12 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     private fun init() {
         setupKoinFragmentFactory(scope)
 
-        mViewModel = injectViewModel().value
-        mBinding.setVariable(getViewModelId(), mViewModel)
-        lifecycle.addObserver(mViewModel)
-        mBinding.lifecycleOwner = this
+        viewModel = injectViewModel().value
+        binding.setVariable(getViewModelId(), viewModel)
+        lifecycle.addObserver(viewModel)
+        binding.lifecycleOwner = this
         //注意：子类不可再重新执行此方法，已防止崩溃，具体的回调请看[baseLiveDataObserver(String)]
-        mViewModel.baseLiveData.observe(this) {
+        viewModel.baseLiveData.observe(this) {
             baseLiveDataObserver(it)
         }
         NetworkObserverManager.getInstance().addListener(this)
@@ -136,10 +135,10 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     protected fun showLoadingDialog() {
-        if (this::mLoadingDialog.isInitialized.not()) {
-            mLoadingDialog = initLoadingDialog()
+        if (this::loadingDialog.isInitialized.not()) {
+            loadingDialog = initLoadingDialog()
         }
-        mLoadingDialog.run {
+        loadingDialog.run {
             if (isShowing.not()) {
                 show()
             }
@@ -147,10 +146,10 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     protected fun dismissLoadingDialog() {
-        if (this::mLoadingDialog.isInitialized.not()) {
+        if (this::loadingDialog.isInitialized.not()) {
             return
         }
-        mLoadingDialog.run {
+        loadingDialog.run {
             if (isShowing) {
                 dismiss()
             }

@@ -32,18 +32,18 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     SupportFragment(), NetworkObserverManager.Listener, AndroidScopeComponent,
     IViewDataBinding<VDB> {
 
-    protected val TAG = javaClass.simpleName
+    protected val TAG by lazy { this.javaClass.simpleName }
 
     private var _binding: VDB? = null
 
     /**
      * 仅在[onCreateView]->[onDestroyView]之间有效，不可在其他生命周期之外调用
      */
-    protected val mBinding: VDB
+    protected val binding: VDB
         get() = _binding!!
 
-    protected lateinit var mViewModel: VM
-    private lateinit var mLoadingDialog: Dialog
+    protected lateinit var viewModel: VM
+    private lateinit var loadingDialog: Dialog
 
     override val scope: Scope by fragmentScope()
 
@@ -56,9 +56,9 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
         _binding = if (layoutId == 0) {
             inflateBinding(inflater, container)
         } else {
-            DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+            DataBindingUtil.inflate(inflater, layoutId, container, false)
         }
-        return mBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +71,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     override fun onDestroyView() {
         dismissLoadingDialog()
         super.onDestroyView()
-        viewLifecycleOwner.lifecycle.removeObserver(mViewModel)
+        viewLifecycleOwner.lifecycle.removeObserver(viewModel)
         _binding?.unbind()
         _binding = null
         NetworkObserverManager.getInstance().removeListener(this)
@@ -100,12 +100,12 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     protected abstract fun initData(savedInstanceState: Bundle?)
 
     private fun init() {
-        mViewModel = injectViewModel().value
-        mBinding.setVariable(getViewModelId(), mViewModel)
-        viewLifecycleOwner.lifecycle.addObserver(mViewModel)
-        mBinding.lifecycleOwner = viewLifecycleOwner
+        viewModel = injectViewModel().value
+        binding.setVariable(getViewModelId(), viewModel)
+        viewLifecycleOwner.lifecycle.addObserver(viewModel)
+        binding.lifecycleOwner = viewLifecycleOwner
         //注意：子类不可再重新执行此方法，已防止崩溃，具体的回调请看[baseLiveDataObserver(String)]
-        mViewModel.baseLiveData.observe(viewLifecycleOwner) {
+        viewModel.baseLiveData.observe(viewLifecycleOwner) {
             baseLiveDataObserver(it)
         }
 
@@ -140,10 +140,10 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
 
     protected fun showLoadingDialog() {
         if (canShowLoadingDialog()) {
-            if (this::mLoadingDialog.isInitialized.not()) {
-                mLoadingDialog = initLoadingDialog()
+            if (this::loadingDialog.isInitialized.not()) {
+                loadingDialog = initLoadingDialog()
             }
-            mLoadingDialog.run {
+            loadingDialog.run {
                 if (isShowing.not()) {
                     show()
                 }
@@ -152,10 +152,10 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     protected fun dismissLoadingDialog() {
-        if (this::mLoadingDialog.isInitialized.not()) {
+        if (this::loadingDialog.isInitialized.not()) {
             return
         }
-        mLoadingDialog.run {
+        loadingDialog.run {
             if (isShowing) {
                 dismiss()
             }
@@ -163,7 +163,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     /**
-     * 是否可以显示[mLoadingDialog]
+     * 是否可以显示[loadingDialog]
      * 考虑到有可能[Activity]和[Fragment]共用[ViewModel]的情况
      */
     protected open fun canShowLoadingDialog() = true

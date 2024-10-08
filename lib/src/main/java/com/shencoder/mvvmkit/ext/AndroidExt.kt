@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
@@ -183,8 +184,51 @@ fun Context.copyClipData(label: String, text: String) {
     cm.setPrimaryClip(ClipData.newPlainText(label, text))
 }
 
+private val handler = Handler(Looper.getMainLooper())
+
+fun uiPost(runnable: Runnable) {
+    handler.post(runnable)
+}
+
+fun uiPostDelayed(delay: Long, runnable: Runnable) {
+    handler.postDelayed(runnable, delay)
+}
+
 /** Returns {@code true} if called on the main thread, {@code false} otherwise. */
 fun isOnMainThread() = Looper.getMainLooper() == Looper.myLooper()
 
 /** Returns {@code true} if called on a background thread, {@code false} otherwise. */
 fun isOnBackgroundThread() = isOnMainThread().not()
+
+/**
+ * 跳转Activity
+ *
+ * @param T
+ * @param block
+ * @receiver
+ */
+inline fun <reified T : Activity> Context.startActivity(block: Intent.() -> Unit) {
+    val intent = Intent(this, T::class.java)
+    intent.block()
+    if (this !is Activity) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    startActivity(intent)
+}
+
+/**
+ * 跳转Activity
+ *
+ * @param T
+ * @param block
+ * @receiver
+ */
+inline fun <reified T : Activity> Fragment.startActivity(block: Intent.() -> Unit) {
+    val context = requireContext()
+    val intent = Intent(context, T::class.java)
+    intent.block()
+    if (context !is Activity) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    startActivity(intent)
+}

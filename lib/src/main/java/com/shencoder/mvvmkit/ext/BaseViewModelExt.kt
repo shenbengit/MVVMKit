@@ -1,5 +1,7 @@
 package com.shencoder.mvvmkit.ext
 
+import android.app.Activity
+import android.content.Intent
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -107,6 +109,17 @@ fun <T> BaseViewModel<*>.request(
     })
 
     onComplete()
+}
+
+/**
+ * 跳转Activity
+ *
+ * @param T
+ * @param block
+ * @receiver
+ */
+inline fun <reified T : Activity> BaseViewModel<*>.startActivity(block: Intent.() -> Unit) {
+    applicationContext.startActivity<T>(block)
 }
 
 
