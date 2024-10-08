@@ -14,8 +14,8 @@ android {
         applicationId "com.shencoder.mvvmkitdemo"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 1000
+        versionName "1.0.0"
 
         multiDexEnabled = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

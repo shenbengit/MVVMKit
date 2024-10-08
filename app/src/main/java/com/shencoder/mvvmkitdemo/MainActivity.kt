@@ -4,6 +4,9 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
 import com.shencoder.mvvmkit.ext.logI
+import com.shencoder.mvvmkit.ext.startActivity
+import com.shencoder.mvvmkit.ext.uiPostDelayed
+import com.shencoder.mvvmkit.util.AppUtils
 import com.shencoder.mvvmkit.util.MoshiUtils
 import com.shencoder.mvvmkit.util.NullSafeMoshiUtils
 import com.shencoder.mvvmkit.util.base64ToByteArray
@@ -76,6 +79,27 @@ class MainActivity : BaseSupportActivity<MainViewModel, ActivityMainBinding>() {
         }
 //        adc = "123123"
         logI(TAG, "initView: mmkv: adc $adc")
+//        startActivity<MainActivity> {
+//            putExtra("AAA", "123")
+//        }
+
+        val md5 = AppUtils.getAppSignaturesMd5()
+        val sha1 = AppUtils.getAppSignaturesSha1()
+        val sha256 = AppUtils.getAppSignaturesSha256()
+        logI(TAG, "initView: getAppSignaturesMd5: $md5")
+        logI(TAG, "initView: getAppSignaturesSha1: $sha1")
+        logI(TAG, "initView: getAppSignaturesSha256: $sha256")
+
+        logI(TAG, "initView: isAppFirstTimeInstall: ${AppUtils.isAppFirstTimeInstall()}")
+        logI(TAG, "initView: isAppUpgraded: ${AppUtils.isAppUpgraded()}")
+        logI(TAG, "initView: isAppDebug: ${AppUtils.isAppDebug()}")
+        logI(TAG, "initView: getAppVersionCode: ${AppUtils.getAppVersionCode()}")
+        logI(TAG, "initView: getAppVersionName: ${AppUtils.getAppVersionName()}")
+        logI(TAG, "initView: getPackageName: ${AppUtils.getPackageName()}")
+        logI(TAG, "initView: isDeviceRooted: ${AppUtils.isDeviceRooted()}")
+        logI(TAG, "initView: isDevelopmentSettingsEnabled: ${AppUtils.isDevelopmentSettingsEnabled()}")
+        logI(TAG, "initView: isUsbDebugSettingsEnabled: ${AppUtils.isUsbDebugSettingsEnabled()}")
+
     }
 
 
