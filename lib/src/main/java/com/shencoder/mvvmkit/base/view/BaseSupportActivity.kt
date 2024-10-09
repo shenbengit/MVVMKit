@@ -134,7 +134,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
         return LoadingDialog.createDefault(this)
     }
 
-    protected fun showLoadingDialog() {
+    fun showLoadingDialog() {
         if (this::loadingDialog.isInitialized.not()) {
             loadingDialog = initLoadingDialog()
         }
@@ -145,7 +145,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
         }
     }
 
-    protected fun dismissLoadingDialog() {
+    fun dismissLoadingDialog() {
         if (this::loadingDialog.isInitialized.not()) {
             return
         }

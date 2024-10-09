@@ -138,7 +138,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
         return LoadingDialog.createDefault(requireContext())
     }
 
-    protected fun showLoadingDialog() {
+    fun showLoadingDialog() {
         if (canShowLoadingDialog()) {
             if (this::loadingDialog.isInitialized.not()) {
                 loadingDialog = initLoadingDialog()
@@ -151,7 +151,7 @@ abstract class BaseSupportFragment<VM : BaseViewModel<out IRepository>, VDB : Vi
         }
     }
 
-    protected fun dismissLoadingDialog() {
+    fun dismissLoadingDialog() {
         if (this::loadingDialog.isInitialized.not()) {
             return
         }

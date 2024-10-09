@@ -1,6 +1,11 @@
 package com.shencoder.mvvmkit
 
 import android.app.Application
+import com.shencoder.mvvmkit.ext.globalInit
+import com.shencoder.mvvmkit.ext.initFragmentation
+import com.shencoder.mvvmkit.ext.initKoin
+import com.shencoder.mvvmkit.ext.initMMKV
+import com.shencoder.mvvmkit.ext.initToasty
 import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.shencoder.mvvmkit.util.AppManager
 import com.tencent.mmkv.MMKV
@@ -37,8 +42,7 @@ object InitEnvironment {
      *
      * @param application
      * @param environment
-     * @param block [GlobalInitExt]
-     * @receiver
+     * @param block 调用[globalInit] 或者 [initToasty] [initMMKV] [initFragmentation] [initKoin]
      */
     @JvmStatic
     fun init(
