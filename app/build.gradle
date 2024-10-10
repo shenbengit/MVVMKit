@@ -21,23 +21,23 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        signingConfigs {
-            create("keystore") {
-                keyAlias = "mvvmkit"
-                keyPassword = "123456"
-                storeFile = file("/keystore/keystore.jks")
-                storePassword = "123456"
-            }
-        }
-    }
+//    signingConfigs {
+//        signingConfigs {
+//            create("keystore") {
+//                keyAlias = "mvvmkit"
+//                keyPassword = "123456"
+//                storeFile = file("/keystore/keystore.jks")
+//                storePassword = "123456"
+//            }
+//        }
+//    }
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig = signingConfigs.getByName("keystore")
+//            signingConfig = signingConfigs.getByName("keystore")
         }
         debug {
             minifyEnabled false
@@ -78,7 +78,7 @@ dependencies {
     kapt moshi.moshi_kotlin_codegen
 
     implementation project(path: ':lib')
-//    implementation 'com.github.shenbengit:MVVMKit:2.0.1'
+//    implementation 'com.github.shenbengit:MVVMKit:2.0.2'
 
     debugImplementation rootProject.ext.deps.leakcanary
 }
