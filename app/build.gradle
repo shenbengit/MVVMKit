@@ -43,7 +43,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig = signingConfigs.getByName("keystore")
+//            signingConfig = signingConfigs.getByName("keystore")
         }
     }
 
@@ -61,7 +61,6 @@ android {
         buildConfig = true
     }
 }
-
 dependencies {
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.5.0'
@@ -79,6 +78,7 @@ dependencies {
     kapt moshi.moshi_kotlin_codegen
 
     implementation project(path: ':lib')
+//    implementation 'com.github.shenbengit:MVVMKit:2.0.1'
+
     debugImplementation rootProject.ext.deps.leakcanary
-//    implementation 'com.github.shenbengit:MVVMKit:1.0.3'
 }
