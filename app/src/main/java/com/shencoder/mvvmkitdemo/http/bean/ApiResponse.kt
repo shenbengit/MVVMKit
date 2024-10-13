@@ -18,7 +18,7 @@ open class ApiResponse<T>(
     val data: T?,
     @Json(name = "msg")
     val msg: String
-) : BaseResponse<T>() {
+) : BaseResponse<T> {
 
     override fun isSuccess(): Boolean {
         return code == 200

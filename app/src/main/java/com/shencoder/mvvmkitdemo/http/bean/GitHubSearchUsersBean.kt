@@ -13,7 +13,7 @@ data class GitHubSearchUsersBean(
     val items: List<Item>,
     @Json(name = "total_count")
     val totalCount: Int
-): BaseResponse<GitHubSearchUsersBean>() {
+): BaseResponse<GitHubSearchUsersBean> {
     @JsonClass(generateAdapter = true)
     data class Item(
         @Json(name = "avatar_url")

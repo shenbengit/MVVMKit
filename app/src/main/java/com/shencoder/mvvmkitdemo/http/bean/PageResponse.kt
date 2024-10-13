@@ -20,7 +20,7 @@ class PageResponse<T>(
     val data: PageData<T>,
     @Json(name = "msg")
     val msg: String
-) : BaseResponse<PageData<T>>() {
+) : BaseResponse<PageData<T>> {
 
     override fun isSuccess(): Boolean {
         return code == 200
