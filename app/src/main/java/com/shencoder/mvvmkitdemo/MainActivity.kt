@@ -1,12 +1,17 @@
 package com.shencoder.mvvmkitdemo
 
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
 import com.shencoder.mvvmkit.ext.base64ToByteArray
+import com.shencoder.mvvmkit.ext.dp2px
+import com.shencoder.mvvmkit.ext.getColor
+import com.shencoder.mvvmkit.ext.getDrawable
+import com.shencoder.mvvmkit.ext.gradientDrawable
 import com.shencoder.mvvmkit.ext.logI
-import com.shencoder.mvvmkit.ext.startActivity
-import com.shencoder.mvvmkit.ext.uiPostDelayed
+import com.shencoder.mvvmkit.ext.shapeDrawable
 import com.shencoder.mvvmkit.util.AppUtils
 import com.shencoder.mvvmkit.util.MoshiUtils
 import com.shencoder.mvvmkit.util.NullSafeMoshiUtils
@@ -97,8 +102,44 @@ class MainActivity : BaseSupportActivity<MainViewModel, ActivityMainBinding>() {
         logI(TAG, "initView: getAppVersionName: ${AppUtils.getAppVersionName()}")
         logI(TAG, "initView: getPackageName: ${AppUtils.getPackageName()}")
         logI(TAG, "initView: isDeviceRooted: ${AppUtils.isDeviceRooted()}")
-        logI(TAG, "initView: isDevelopmentSettingsEnabled: ${AppUtils.isDevelopmentSettingsEnabled()}")
+        logI(
+            TAG,
+            "initView: isDevelopmentSettingsEnabled: ${AppUtils.isDevelopmentSettingsEnabled()}"
+        )
         logI(TAG, "initView: isUsbDebugSettingsEnabled: ${AppUtils.isUsbDebugSettingsEnabled()}")
+
+//        binding.iv2.setImageDrawable(
+//            shapeDrawable(
+//                solidColor = Color.BLUE,
+//                cornerTopLeftRadius = dp2px(25f).toFloat(),
+//                cornerTopRightRadius = dp2px(25f).toFloat(),
+//                cornerBottomRightRadius = dp2px(25f).toFloat(),
+//                cornerBottomLeftRadius = dp2px(25f).toFloat(),
+//                strokeColor = Color.WHITE,
+//                strokeWidth = dp2px(5f)
+//            )
+//        )
+        val color = R.color.white.getColor()
+        val drawable = R.drawable.a.getDrawable()
+
+        binding.iv2.setImageDrawable(
+            gradientDrawable(
+                colors = intArrayOf(
+                    Color.parseColor("#8BC34A"),
+                    Color.parseColor("#FFC54E"),
+                    Color.parseColor("#FF9326"),
+                ),
+                orientation = GradientDrawable.Orientation.LEFT_RIGHT,
+                gradientCenterX = 0.2f,
+                gradientCenterY = 0.2f,
+                cornerTopLeftRadius = dp2px(25f).toFloat(),
+                cornerTopRightRadius = dp2px(25f).toFloat(),
+                cornerBottomRightRadius = dp2px(25f).toFloat(),
+                cornerBottomLeftRadius = dp2px(25f).toFloat(),
+                strokeColor = Color.WHITE,
+                strokeWidth = dp2px(5f)
+            )
+        )
 
     }
 
