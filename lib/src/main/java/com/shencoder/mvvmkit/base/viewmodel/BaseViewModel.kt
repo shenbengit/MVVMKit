@@ -2,7 +2,6 @@ package com.shencoder.mvvmkit.base.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -12,7 +11,6 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.shencoder.mvvmkit.R
 import com.shencoder.mvvmkit.base.repository.IRepository
 import com.shencoder.mvvmkit.ext.isOnMainThread
 import org.koin.core.component.KoinComponent
@@ -69,24 +67,7 @@ abstract class BaseViewModel<REPOSITORY : IRepository>(
         get() = getApplication()
 
     open fun getString(@StringRes resId: Int): String {
-        return if (resId == 0) {
-            applicationContext.getString(R.string.empty_str)
-        } else {
-            applicationContext.getString(resId)
-        }
-    }
-
-    protected fun startActivity(intent: Intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        applicationContext.startActivity(intent)
-    }
-
-    protected fun startService(intent: Intent) {
-        applicationContext.startService(intent)
-    }
-
-    protected fun stopService(intent: Intent) {
-        applicationContext.stopService(intent)
+        return applicationContext.getString(resId)
     }
 
     /**

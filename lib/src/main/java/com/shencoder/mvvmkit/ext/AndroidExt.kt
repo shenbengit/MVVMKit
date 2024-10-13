@@ -9,12 +9,18 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.Px
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -34,14 +40,6 @@ fun sp2px(dp: Float): Int {
     return AppManager.context.sp2px(dp)
 }
 
-fun dp2px(@DimenRes id: Int): Int {
-    return AppManager.context.dp2px(id)
-}
-
-fun sp2px(@DimenRes id: Int): Int {
-    return AppManager.context.sp2px(id)
-}
-
 private fun Context.dp2px(dp: Float): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, dp,
@@ -54,14 +52,6 @@ private fun Context.sp2px(dp: Float): Int {
         TypedValue.COMPLEX_UNIT_SP, dp,
         resources.displayMetrics
     ).roundToInt()
-}
-
-private fun Context.dp2px(@DimenRes id: Int): Int {
-    return resources.getDimensionPixelSize(id)
-}
-
-private fun Context.sp2px(@DimenRes id: Int): Int {
-    return resources.getDimensionPixelSize(id)
 }
 
 fun Context.findActivity(): Activity? {
@@ -232,3 +222,16 @@ inline fun <reified T : Activity> Fragment.startActivity(block: Intent.() -> Uni
     }
     startActivity(intent)
 }
+
+@ColorInt
+fun @receiver:ColorRes Int.getColor(): Int {
+    return ContextCompat.getColor(AppManager.context, this)
+}
+
+fun @receiver:DrawableRes Int.getDrawable(): Drawable? {
+    return ContextCompat.getDrawable(AppManager.context, this)
+}
+
+@Px
+fun @receiver:DimenRes Int.getDimensionPixelSize() =
+    AppManager.context.resources.getDimensionPixelSize(this)
