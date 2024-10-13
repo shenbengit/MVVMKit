@@ -1,3 +1,5 @@
+@file:JvmName("ViewExt")
+
 package com.shencoder.mvvmkit.ext
 
 import android.view.View
@@ -9,6 +11,9 @@ fun View.isLayoutRTL(): Boolean {
 
 private var triggerLastTime: Long = 0L
 
+var DEFAULT_CLICK_INTERVAL = 300L
+
+
 /**
  * 点击防抖动，默认500ms
  * tips：这个操作是全局的
@@ -18,7 +23,7 @@ private var triggerLastTime: Long = 0L
  * @param block
  * @receiver
  */
-fun <T : View> T.clickWithTrigger(interval: Long = 500, block: (T) -> Unit) {
+fun <T : View> T.clickWithTrigger(interval: Long = DEFAULT_CLICK_INTERVAL, block: (T) -> Unit) {
     setOnClickListener {
         val currentClickTime = System.currentTimeMillis()
         if (currentClickTime - triggerLastTime >= interval) {

@@ -9,7 +9,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -224,13 +223,11 @@ inline fun <reified T : Activity> Fragment.startActivity(block: Intent.() -> Uni
 }
 
 @ColorInt
-fun @receiver:ColorRes Int.getColor(): Int {
-    return ContextCompat.getColor(AppManager.context, this)
-}
+fun @receiver:ColorRes Int.getColor() =
+    ContextCompat.getColor(AppManager.context, this)
 
-fun @receiver:DrawableRes Int.getDrawable(): Drawable? {
-    return ContextCompat.getDrawable(AppManager.context, this)
-}
+fun @receiver:DrawableRes Int.getDrawable() =
+    ContextCompat.getDrawable(AppManager.context, this)
 
 @Px
 fun @receiver:DimenRes Int.getDimensionPixelSize() =

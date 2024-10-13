@@ -4,14 +4,20 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import com.shencoder.mvvmkit.base.view.BaseSupportActivity
 import com.shencoder.mvvmkit.ext.base64ToByteArray
+import com.shencoder.mvvmkit.ext.clickWithTrigger
 import com.shencoder.mvvmkit.ext.dp2px
 import com.shencoder.mvvmkit.ext.getColor
+import com.shencoder.mvvmkit.ext.getDimensionPixelSize
 import com.shencoder.mvvmkit.ext.getDrawable
 import com.shencoder.mvvmkit.ext.gradientDrawable
 import com.shencoder.mvvmkit.ext.logI
 import com.shencoder.mvvmkit.ext.shapeDrawable
+import com.shencoder.mvvmkit.http.DownloadFile
+import com.shencoder.mvvmkit.http.downloadFile
+import com.shencoder.mvvmkit.network.NetworkObserverManager
 import com.shencoder.mvvmkit.util.AppUtils
 import com.shencoder.mvvmkit.util.MoshiUtils
 import com.shencoder.mvvmkit.util.NullSafeMoshiUtils
@@ -24,6 +30,7 @@ import com.shencoder.mvvmkitdemo.databinding.ActivityMainBinding
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -141,8 +148,34 @@ class MainActivity : BaseSupportActivity<MainViewModel, ActivityMainBinding>() {
             )
         )
 
-    }
+//        lifecycleScope.launch {
+//            downloadFile(url = "", filePath = "", md5 = "") {
+//                start {
+//
+//                }
+//                progress { totalSize, downloadSize, progress ->
+//
+//                }
+//                success { file, fileMd5, md5VerifySuccess ->
+//
+//                }
+//                error {
+//
+//                }
+//            }.startDownload()
+//
+//            DownloadFile(url = "", filePath = "", md5 = "").start {
+//
+//            }.progress { totalSize, downloadSize, progress ->
+//
+//            }.success { file, fileMd5, md5VerifySuccess ->
+//
+//            }.error {
+//
+//            }.startDownload()
+//        }
 
+    }
 
     override fun initData(savedInstanceState: Bundle?) {
 
