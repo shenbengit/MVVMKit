@@ -608,6 +608,38 @@ NetworkObserverManager.getInstance().removeListener(listener)
 管理Activity和App前后台监听
 详见[AppManager](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/util/AppManager.kt)
 
+#### MMKV
+MmkvUtils：用户级[MMKV]存储，跟随用户生命周期，在用户退出登录时清除存储
+GlobalMmkvUtils：全局[MMKV]存储，跟随app生命周期；比如：App语言
+```
+// 获取用户级mmkv对象，全局调用
+// kotlin 直接引用mmkv即可
+mmkv
+// java
+val mmkv = MmkvUtils.mmkv
+
+// 获取全局mmkv对象，全局调用
+// kotlin 直接引用globalMmkv即可
+globalMmkv
+// java
+val mmkv = GlobalMmkvUtils.mmkv
+
+```
+`MMKV扩展`，详见详见[MMKVProperty](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/util/mmkv/MMKVProperty.kt)    
+保存的**key**直接使用字段名。
+```
+// mmkv 传入要保存的mmkv对象，默认传入的是用户级的mmkv对象
+var name by mmkvString(default = "", mmkv = mmkv)
+name = "123"
+
+// 转化成LiveData
+val age by mmkvInt().asLiveData()
+age.observe(this) {
+    logI(TAG, "age: $it")
+}
+age.value = 18
+```
+
 #### 其他扩展和工具类
 还有一些功能方法封装，如MoshiUtil、Nv21ToBitmap等，具体在[ext](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/ext)和[util](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/util)包下，可自行查看。
 
