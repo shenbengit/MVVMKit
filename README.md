@@ -2,6 +2,8 @@
 使用Kotlin搭建Android MVVM快速开发框架。
 
 ## 引入
+`注意：2.x.x版本与1.x.x版本不兼容`
+
 ### 将JitPack存储库添加到您的项目中(项目根目录下build.gradle文件)
 ```gradle
 allprojects {
@@ -57,6 +59,7 @@ dependencies {
 - [SFragmentation](https://github.com/weikaiyun/SFragmentation):框架负责管理fragment的各种操作，相比于google新出的navigation框架，更加灵活多变，易于使用；
 - [Toasty](https://github.com/GrenderG/Toasty):吐司；
 - [LoadingDialog](https://github.com/shenbengit/LoadingDialog):Android LoadingDialog;
+- [BRV](https://github.com/liangjingkanji/BRV):Android 快速构建 RecyclerView, 比 BRVAH 更简单强大;
 
 ## 快速使用
 ### 初始化
@@ -67,27 +70,53 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val koinApplication =
-            KoinAndroidApplication
-                .create(
-                    this,
-                    if (BuildConfig.DEBUG) Level.ERROR else Level.ERROR
-                )
-                .modules(appModule)//参考[appModule](https://github.com/shenbengit/SrsRtcAndroidClient/blob/132bc94d4a2c6a53f7af96784eaf75877477cd8b/app/src/main/java/com/shencoder/srs_rtc_android_client/di/AppModule.kt#L20)
-                
-          //初始化Logger
-//        initLogger(Constant.TAG)
-          //初始化吐司
-//        initToasty()
-          //初始化MMKV
-//        initMMKV(if (BuildConfig.DEBUG) MMKVLogLevel.LevelDebug else MMKVLogLevel.LevelNone)
-          //初始化Fragmentation
-//        initFragmentation(BuildConfig.DEBUG)
-          //初始化Koin
-//        initKoin(koinApplication)
-         
-        //快速初始化，包括上面的五个方法，只不过是默认配置
-        globalInit(BuildConfig.DEBUG, Constant.TAG, koinApplication)
+        InitEnvironment.init(this, object : InitEnvironment.ConfigurationEnvironment {
+
+            override val debug: Boolean
+                get() = BuildConfig.DEBUG
+
+            override val mmkvMode: Int
+                get() = super.mmkvMode
+
+            override val mmkvCryptKey: String?
+                get() = super.mmkvCryptKey
+
+            override fun logV(tag: String, msg: () -> Any) {
+                Log.v(tag, msg().toString())
+            }
+
+            override fun logD(tag: String, msg: () -> Any) {
+                if (debug) {
+                    Log.d(tag, msg().toString())
+                }
+            }
+
+            override fun logI(tag: String, msg: () -> Any) {
+                Log.i(tag, msg().toString())
+            }
+
+            override fun logW(tag: String, msg: () -> Any) {
+                Log.w(tag, msg().toString())
+            }
+
+            override fun logE(tag: String, msg: () -> Any) {
+                Log.e(tag, msg().toString())
+            }
+        }) {
+            val koinApplication =
+                KoinAndroidApplication
+                    .create(
+                        this,
+                        if (BuildConfig.DEBUG) Level.ERROR else Level.ERROR
+                    )
+                    .modules(appModule)
+            globalInit(koinApplication)
+
+//            initToasty()
+//            initMMKV()
+//            initFragmentation()
+//            initKoin(koinApplication)
+        }
     }
 }
 ```
@@ -116,10 +145,12 @@ abstract class BaseActivity<VM : BaseViewModel<out IRepository>, VDB : ViewDataB
 使用示例
 ```kotlin
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
-    
-    override fun getLayoutId(): Int {
-        return R.layout.activity_main
-    }
+    /**
+     * 如果不重写，将反射获取
+     */
+//    override fun getLayoutId(): Int {
+//        return R.layout.activity_main
+//    }
 
     override fun injectViewModel(): Lazy<MainViewModel> {
         return viewModel()
@@ -163,9 +194,12 @@ abstract class BaseFragment<VM : BaseViewModel<out IRepository>, VDB : ViewDataB
 ```kotlin
 class TestFragment : BaseFragment<DefaultViewModel, FragmentTestBinding>() {
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_test
-    }
+    /**
+     * 如果不重写，将反射获取
+     */
+//    override fun getLayoutId(): Int {
+//        return R.layout.fragment_test
+//    }
 
     /**
      * 注入ViewModel
@@ -189,7 +223,7 @@ class TestFragment : BaseFragment<DefaultViewModel, FragmentTestBinding>() {
 }
 ```
 #### BaseViewModel    
-ViewMode的基类；    
+ViewMode的基类，感知View生命周期；    
 ```kotlin
 class MainViewModel(
     application: Application,
@@ -246,16 +280,15 @@ class BaseNothingRepository : BaseRepository()
 class RetrofitClient : BaseRetrofitClient() {
 
     companion object {
+        private const val TAG = "RetrofitClient"
         private const val DEFAULT_MILLISECONDS: Long = 30
     }
 
     private lateinit var apiService: ApiService
 
     override fun generateOkHttpBuilder(builder: OkHttpClient.Builder): OkHttpClient.Builder {
-        val interceptor = HttpLoggingInterceptor { message -> XLog.i(message) }
-        interceptor.level =
-            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BASIC
-            else HttpLoggingInterceptor.Level.NONE
+        val interceptor = HttpLoggerInterceptor { message -> logI(TAG) { message } }
+        interceptor.level = HttpLoggerInterceptor.Level.BODY
 
         return builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.SECONDS)
             .writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.SECONDS)
@@ -264,39 +297,62 @@ class RetrofitClient : BaseRetrofitClient() {
     }
 
     override fun generateRetrofitBuilder(builder: Retrofit.Builder): Retrofit.Builder {
-        return builder
+        return builder.apply {
+            val moshi = Moshi.Builder()
+                .addLast(NullSafeKotlinJsonAdapterFactory())
+                .addLast(NullSafeStandardJsonAdapters.FACTORY)
+                .build()
+            addConverterFactory(MoshiConverterFactory.create(moshi))
+        }
     }
 
     /**
      * 动态修改Retrofit-baseUrl
      */
     fun setBaseUrl(baseUrl: String) {
-        apiService = getApiService(ApiService::class.java, baseUrl)
+        apiService = getApiService(ApiService::class.java, baseUrl, false)
     }
 
     fun getApiService(): ApiService {
         if (this::apiService.isInitialized.not()) {
-            setBaseUrl(Constants.BASE_API_HTTPS_URL)
+            setBaseUrl("https://api.github.com/")
         }
         return apiService
     }
+
 }
 ```
 #### 文件下载（DownloadRetrofitClient）
+支持md5文件校验，暂不支持断点续传；    
 使用示例：
 ```kotlin
-GlobalScope.launch {
-    //下载文件
-    DownloadFile(
-        "http://ip:port/xxx.txt",
-        "test.txt"
-    ).progress { totalSize: Long, downloadSize: Long, /*[0-1]*/progress: Float ->
-        //进度回调
-    }.success { file: File ->
-        //下载成功
-    }.error { error: Throwable ->
-        //下载失败
-    }.startDownload()//开始下载 suspend 方法
+lifecycleScope.launch {
+    // 1
+    downloadFile(url = "", filePath = "", md5 = "") {
+        start {
+
+        }
+        progress { totalSize, downloadSize, progress ->
+
+        }
+        success { file, fileMd5, md5VerifySuccess ->
+
+        }
+        error {
+
+        }
+    }.startDownload()
+
+    // 2
+    DownloadFile(url = "", filePath = "", md5 = "").start {
+
+    }.progress { totalSize, downloadSize, progress ->
+
+    }.success { file, fileMd5, md5VerifySuccess ->
+
+    }.error {
+
+    }.startDownload()
 }
 ```
 #### BaseResponse（网络请求接口返回继承基类）
@@ -311,7 +367,7 @@ open class ApiResponse<T>(
     val data: T?,
     @Json(name = "msg")
     val msg: String
-) : BaseResponse<T>() {
+) : BaseResponse<T> {
 
     override fun isSuccess(): Boolean {
         return code == 200
@@ -373,6 +429,8 @@ class MainViewModel(
                 toastWarning("userList is null.")
                 return@httpRequest
             }
+            // 如果确保data不可能为null，则可使用
+//            val data = it.requireData
             analyticalData(data, unSelectedSet)
         }, onFailure = {
             //请求失败
@@ -386,6 +444,70 @@ class MainViewModel(
     }
 }
 ```
+#### httpRequest 
+网络请求快速调用，返回类需要实现[BaseResponse](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/http/bean/BaseResponse.kt)接口，用例见上；    
+对CoroutineScope进行了扩展，可以快速使用，同时也对**BaseSupportActivity**、**BaseSupportFragment**、**BaseViewModel**，并且支持快速显示LoadingDialog
+```kotlin
+fun <T> CoroutineScope.httpRequest(
+    block: suspend CoroutineScope.() -> BaseResponse<T>,
+    onStart: () -> Unit = {},
+    onSuccess: (ResultStatus.Success<T>) -> Unit = {},
+    onFailure: (ResultStatus.Failure) -> Unit = {},
+    onError: (ResultStatus.Error) -> Unit = {},
+    onComplete: () -> Unit = {}
+) = launch(Dispatchers.Main) {
+    onStart()
+
+    val result = runCatching { block() }
+
+    result.fold({
+        if (it.isSuccess()) {
+            onSuccess(ResultStatus.onSuccess(it.getResponseData()))
+        } else {
+            //处理公共的失败事件
+            val handled = DefaultHttpRequestHandler.defaultHttpRequestFailure?.invoke(
+                it.getResponseCode(),
+                it.getResponseMsg()
+            ) ?: false
+            if (!handled) {
+                // 如果公共事件处理了，则不回调
+                onFailure(ResultStatus.onFailure(it.getResponseCode(), it.getResponseMsg()))
+            }
+        }
+    }, {
+        //处理公共的异常事件
+        DefaultHttpRequestHandler.defaultHttpRequestError?.invoke(it)
+        onError(ResultStatus.onError(it))
+    })
+
+    onComplete()
+}
+```
+
+
+#### DefaultHttpRequestHandler 
+公共处理网络请求失败的方式，需搭配[httpRequest](https://github.com/shenbengit/MVVMKit/blob/83b7991e36372e6d3ef90945c010b2f903958fb7/lib/src/main/java/com/shencoder/mvvmkit/ext/CoroutineScopeExt.kt#L27)使用
+```kotlin
+// 默认处理公共的失败结果
+// 如果返回true，则不会回调[httpRequest]里的[onFailure]函数
+DefaultHttpRequestHandler.defaultHttpRequestFailure = { code, msg ->
+    when (code) {
+        401 -> {
+            // 跳转到登录页
+
+            true
+        }
+
+        else -> false
+    }
+}
+// 默认处理异常的失败结果
+DefaultHttpRequestHandler.defaultHttpRequestError = { error ->
+
+}
+```
+
+
 ### Koin(依赖注入)
 这一部分需要你先去了解Koin相关知识（比Dagger简单多了）    
 本库中在初始化时已经默认加入了一些要默认注入的库：
@@ -422,7 +544,8 @@ private val retrofitClient : RetrofitClient by inject()
 ### Databinding
 本库中封装了一些Databinding中常用的一些方法，具体可以看下[DataBindingAdapter](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/binding/DataBindingAdapter.kt)，方便快速开发。
 
-### Toast(吐司)扩展方法
+### 其他
+#### Toast(吐司)扩展方法
 这一步对Toast进行了扩展，在Activity、Fragment、Dialog、ViewModel中可以直接使用，如：
 ```kotlin
 toastError("error")
@@ -430,11 +553,63 @@ toastSuccess("success")
 toastWarning("warning")
 toastNormal("normal")
 ```
-### BaseViewModel扩展方法
-BaseViewModel相关扩展方法在[BaseViewModelExt](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/ext/BaseViewModelExt.kt).
-### 其他
-还有一些功能方法封装，如MoshiUtil、Nv21ToBitmap等，具体在[util](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/util)包下，可自行查看。
 
+#### dp、sp转px
+全局即可调用；    
+```
+// dp转px
+dp2px(25f)
+// sp转px
+sp2px(12f)
+// 
+R.dimen.cardview_compat_inset_shadow.getDimensionPixelSize()
+```
+
+#### 点击防抖
+全局防抖
+```
+btn.clickWithTrigger { 
+
+}
+```
+#### 保存图片到相册
+详见[SaveImageExt](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/ext/SaveImageExt.kt)
+#### 快速创建ShapeDrawable
+详见[ShapeDrawableExt](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/ext/ShapeDrawableExt.kt)
+#### 16进制、md5、加解密方法
+从[commons-codec](https://github.com/apache/commons-codec)复制来的，版本v1.7.1;    
+详见[codec](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/util/codec) 目录
+
+#### 日志
+全局即可调用；    
+使用函数来传递message，这样有个好处，可以控制在不执行是，message函数不执行，比如在开发者模式打印堆栈信息，在生成模式不打印；
+```
+logV(TAG) { "message" }
+logD(TAG) { "message" }
+logI(TAG) { "message" }
+logW(TAG) { "message" }
+logE(TAG) { "message" }
+
+```
+#### NullSafeMoshi
+详见[moshi](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/util/moshi) 目录和[NullSafeMoshiUtils](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/util/NullSafeMoshiUtils.kt)    
+
+#### NetworkObserverManager 
+网络监听，**BaseSupportActivity**、**BaseSupportFragment**已经默认添加了监听，只需重写**onConnectivityChange**方法即可
+```
+val listener = NetworkObserverManager.Listener { isOnline ->
+    // 是否有网
+}
+NetworkObserverManager.getInstance().addListener(listener)
+
+NetworkObserverManager.getInstance().removeListener(listener)
+```
+#### AppManager
+管理Activity和App前后台监听
+详见[AppManager](https://github.com/shenbengit/MVVMKit/blob/master/lib/src/main/java/com/shencoder/mvvmkit/util/AppManager.kt)
+
+#### 其他扩展和工具类
+还有一些功能方法封装，如MoshiUtil、Nv21ToBitmap等，具体在[ext](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/ext)和[util](https://github.com/shenbengit/MVVMKit/tree/master/lib/src/main/java/com/shencoder/mvvmkit/util)包下，可自行查看。
 
 # [LICENSE](https://github.com/shenbengit/MVVMKit/blob/master/LICENSE)
 
