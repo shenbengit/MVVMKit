@@ -32,7 +32,7 @@ fun shapeDrawable(
     @ColorInt strokeColor: Int = Color.TRANSPARENT,
     @Px strokeDashWidth: Float = 0.0f,
     @Px strokeDashGap: Float = 0.0f,
-    padding: Rect = Rect(),
+    padding: Rect? = null,
     @Px width: Int = -1,
     @Px height: Int = -1
 ): GradientDrawable {
@@ -65,7 +65,7 @@ fun shapeDrawable(
             drawable.setStroke(strokeWidth, strokeColor, strokeDashWidth, strokeDashGap)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (padding != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             drawable.setPadding(padding.left, padding.top, padding.right, padding.bottom)
         }
         drawable.setSize(width, height)
@@ -90,7 +90,7 @@ fun gradientDrawable(
     @ColorInt strokeColor: Int = Color.TRANSPARENT,
     @Px strokeDashWidth: Float = 0.0f,
     @Px strokeDashGap: Float = 0.0f,
-    padding: Rect = Rect(),
+    padding: Rect? = null,
     @Px width: Int = -1,
     @Px height: Int = -1
 ): GradientDrawable {
@@ -145,7 +145,7 @@ fun gradientDrawable(
             drawable.setStroke(strokeWidth, strokeColor, strokeDashWidth, strokeDashGap)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (padding != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             drawable.setPadding(padding.left, padding.top, padding.right, padding.bottom)
         }
         drawable.setSize(width, height)
