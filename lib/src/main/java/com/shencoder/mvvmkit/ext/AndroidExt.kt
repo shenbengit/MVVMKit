@@ -196,7 +196,7 @@ fun isOnBackgroundThread() = isOnMainThread().not()
  * @param block
  * @receiver
  */
-inline fun <reified T : Activity> Context.startActivity(block: Intent.() -> Unit) {
+inline fun <reified T : Activity> Context.startActivity(block: Intent.() -> Unit = {}) {
     val intent = Intent(this, T::class.java)
     intent.block()
     if (this !is Activity) {
@@ -212,14 +212,8 @@ inline fun <reified T : Activity> Context.startActivity(block: Intent.() -> Unit
  * @param block
  * @receiver
  */
-inline fun <reified T : Activity> Fragment.startActivity(block: Intent.() -> Unit) {
-    val context = requireContext()
-    val intent = Intent(context, T::class.java)
-    intent.block()
-    if (context !is Activity) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
-    startActivity(intent)
+inline fun <reified T : Activity> Fragment.startActivity(block: Intent.() -> Unit = {}) {
+    requireContext().startActivity<T>(block)
 }
 
 @ColorInt

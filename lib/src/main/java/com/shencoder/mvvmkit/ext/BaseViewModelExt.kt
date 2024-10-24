@@ -90,7 +90,7 @@ fun <T> BaseViewModel<*>.request(
  * @param block
  * @receiver
  */
-inline fun <reified T : Activity> BaseViewModel<*>.startActivity(block: Intent.() -> Unit) {
+inline fun <reified T : Activity> BaseViewModel<*>.startActivity(block: Intent.() -> Unit = {}) {
     applicationContext.startActivity<T>(block)
 }
 
