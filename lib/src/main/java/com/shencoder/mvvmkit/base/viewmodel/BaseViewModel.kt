@@ -60,7 +60,7 @@ abstract class BaseViewModel<REPOSITORY : IRepository>(
      * 为保证对外暴露的LiveData不可变
      * View层调用使用[LiveData]，避免违背单一数据源的原则
      */
-    val baseLiveData: LiveData<String>
+    internal val baseLiveData: LiveData<String>
         get() = _baseLiveData
 
     val applicationContext: Application

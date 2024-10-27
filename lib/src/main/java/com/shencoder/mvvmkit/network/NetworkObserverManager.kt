@@ -65,6 +65,10 @@ class NetworkObserverManager private constructor() {
         listenerList.remove(listener)
     }
 
+    fun clearAllListener() {
+        listenerList.clear()
+    }
+
     fun shutdown() {
         if (this::connectivityManager.isInitialized) {
             connectivityManager.unregisterNetworkCallback(networkCallback)

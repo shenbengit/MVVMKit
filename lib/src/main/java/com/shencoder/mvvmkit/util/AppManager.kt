@@ -209,6 +209,11 @@ object AppManager : DefaultLifecycleObserver {
         processLifecycleObserverList.remove(observer)
     }
 
+    @JvmStatic
+    fun removeAllOnProcessLifecycleObserver() {
+        processLifecycleObserverList.clear()
+    }
+
     override fun onStart(owner: LifecycleOwner) {
         logI(TAG) { "onForeground" }
         _isAppForeground = true

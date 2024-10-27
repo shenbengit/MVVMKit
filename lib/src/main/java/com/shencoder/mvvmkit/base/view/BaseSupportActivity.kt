@@ -56,12 +56,14 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     override fun onDestroy() {
+        if (isRegisterNetwork()) {
+            NetworkObserverManager.getInstance().removeListener(this)
+        }
         dismissLoadingDialog()
         super.onDestroy()
         lifecycle.removeObserver(viewModel)
         _binding?.unbind()
         _binding = null
-        NetworkObserverManager.getInstance().removeListener(this)
     }
 
     protected open fun beforeCreateView() {
@@ -100,7 +102,9 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
         viewModel.baseLiveData.observe(this) {
             baseLiveDataObserver(it)
         }
-        NetworkObserverManager.getInstance().addListener(this)
+        if (isRegisterNetwork()) {
+            NetworkObserverManager.getInstance().addListener(this)
+        }
     }
 
     /**
@@ -157,8 +161,15 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     }
 
     /**
+     * 是否监听网络变化
+     * @see NetworkObserverManager
+     * @see onConnectivityChange
+     */
+    protected open fun isRegisterNetwork() = false
+
+    /**
      * 网络连接状态回调
-     *
+     * @see isRegisterNetwork
      * @param isOnline
      */
     override fun onConnectivityChange(isOnline: Boolean) {
