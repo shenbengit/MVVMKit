@@ -85,10 +85,11 @@ class MainActivity : BaseSupportActivity<MainViewModel, ActivityMainBinding>() {
             TAG,
             "initView: globalMmkv: ${globalMmkv.decodeString("BBB")}, ${globalMmkv.decodeString("BBB1")}"
         )
-        val adc by mmkvString().asLiveData()
+        val adc by mmkvString(default = "", mmkv = mmkv).asLiveData()
         adc.observe(this) {
             logI(TAG, "initView: mmkv: adc $it")
         }
+        adc.value=""
 //        adc = "123123"
         logI(TAG, "initView: mmkv: adc $adc")
 //        startActivity<MainActivity> {

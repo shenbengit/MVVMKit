@@ -19,12 +19,15 @@
 
         <ImageView
             android:id="@+id/iv"
-            isBlur="@{true}"
+            errorImageRes="@{@drawable/ic_test_bg}"
+            fallbackImageRes="@{@drawable/ic_picture_placeholder}"
             isCircle="@{true}"
-            isGrayscale="@{true}"
-            loadImageData="@{R.drawable.ic_test_bg}"
-            android:layout_width="150dp"
+            loadImageData='@{"https://cdn.pixabay.com/photo/2023/06/13/16/25/baby-8061294_1280.jpg"}'
+            placeholderImageRes="@{@drawable/ic_picture_placeholder}"
+            roundingRadius="@{8f}"
+            android:layout_width="210dp"
             android:layout_height="150dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
