@@ -13,6 +13,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CenterInside
@@ -42,10 +43,10 @@ object DataBindingAdapter {
      * @param placeholderImageRes   图片加载中显示展位图
      * @param errorImageRes         图片加载失败显示占位图
      * @param fallbackImageRes      当[data]为null时，加载该资源
-     * @param roundingRadius        圆角
+     * @param roundingRadius        圆角，单位dp，和[isCircle]冲突
      * @param isBlur                是否高斯模糊
      * @param isGrayscale           灰度变换
-     * @param isCircle              裁剪成圆形
+     * @param isCircle              裁剪成圆形，和[roundingRadius]冲突
      * @param isCenterCrop
      * @param isCenterInside
      * @param isFitCenter
@@ -71,9 +72,6 @@ object DataBindingAdapter {
         isFitCenter: Boolean,
     ) {
         loadImage(data) {
-            placeholder(placeholderImageRes)
-            error(errorImageRes)
-            fallback(fallbackImageRes)
             if (roundingRadius > 0f || isBlur || isGrayscale || isCircle || isCenterCrop || isCenterInside || isFitCenter) {
                 val transformations: MutableList<Transformation<Bitmap>> = mutableListOf()
                 if (isCenterCrop) {
@@ -100,6 +98,28 @@ object DataBindingAdapter {
                 }
 
                 transform(*transformations.toTypedArray())
+
+                if (fallbackImageRes != null || placeholderImageRes != null) {
+                    thumbnail(
+                        Glide.with(this@setImageData)
+                            .load(
+                                if (data == null) (fallbackImageRes
+                                    ?: placeholderImageRes) else placeholderImageRes
+                            )
+                            .transform(*transformations.toTypedArray())
+                    )
+                }
+                if (errorImageRes != null) {
+                    error(
+                        Glide.with(this@setImageData)
+                            .load(errorImageRes)
+                            .transform(*transformations.toTypedArray())
+                    )
+                }
+            } else {
+                placeholder(placeholderImageRes)
+                error(errorImageRes)
+                fallback(fallbackImageRes)
             }
         }
     }
