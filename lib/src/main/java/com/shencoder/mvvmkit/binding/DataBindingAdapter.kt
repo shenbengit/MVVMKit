@@ -9,6 +9,8 @@ import android.widget.*
 import androidx.annotation.Dimension
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +25,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.drake.brv.PageRefreshLayout
 import com.drake.statelayout.StateLayout
 import com.drake.statelayout.Status
-import com.shencoder.mvvmkit.ext.dp2px
+import com.shencoder.mvvmkit.ext.dp
 import com.shencoder.mvvmkit.util.ImageUtils.loadImage
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.GrayscaleTransformation
@@ -93,7 +95,7 @@ object DataBindingAdapter {
                     transformations.add(CircleCrop())
                 } else {
                     if (roundingRadius > 0f) {
-                        transformations.add(RoundedCorners(dp2px(roundingRadius)))
+                        transformations.add(RoundedCorners(roundingRadius.dp))
                     }
                 }
 
@@ -290,20 +292,6 @@ object DataBindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter(value = ["setPageRefreshEnable", "setPageLoadMoreEnable"], requireAll = false)
-    fun PageRefreshLayout.setRefreshLoadMoreEnable(
-        refreshEnable: Boolean?,
-        loadMoreEnable: Boolean?
-    ) {
-        if (refreshEnable != null) {
-            setEnableRefresh(refreshEnable)
-        }
-        if (loadMoreEnable != null) {
-            setEnableLoadMore(loadMoreEnable)
-        }
-    }
-
-    @JvmStatic
     @BindingAdapter(value = ["setLayoutState"])
     fun StateLayout.setLayoutState(status: Status) {
         when (status) {
@@ -312,6 +300,30 @@ object DataBindingAdapter {
             Status.ERROR -> showError()
             Status.CONTENT -> showContent()
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["viewVisible"])
+    fun View.setViewVisible(visible: Boolean) {
+        isVisible = visible
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["viewVisible"])
+    fun View.setViewVisible(visible: Any?) {
+        isVisible = visible != null
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["viewInvisible"])
+    fun View.setViewInvisible(visible: Boolean) {
+        isInvisible = !visible
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["viewInvisible"])
+    fun View.setViewInvisible(visible: Any?) {
+        isInvisible = visible == null
     }
 
     private fun getDrawable(context: Context, @DrawableRes drawableId: Int) = if (drawableId != 0) {

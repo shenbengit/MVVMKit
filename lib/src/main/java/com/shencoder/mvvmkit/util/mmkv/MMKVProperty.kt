@@ -72,7 +72,10 @@ fun mmkvStringSet(default: Set<String> = emptySet(), mmkv: MMKV = MmkvUtils.mmkv
         { name: String -> mmkv.decodeStringSet(name, default) }
     )
 
-inline fun <reified T : Parcelable> mmkvParcelable(default: T? = null) =
+inline fun <reified T : Parcelable> mmkvParcelable(
+    default: T? = null,
+    mmkv: MMKV = MmkvUtils.mmkv
+) =
     MMKVProperty(
         { name, value -> mmkv.encode(name, value) },
         { name: String -> mmkv.decodeParcelable(name, T::class.java, default) }

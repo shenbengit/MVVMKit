@@ -9,6 +9,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -31,25 +32,43 @@ import kotlin.math.roundToInt
  * 一些常用方法
  */
 
+val Number.KB: Long
+    get() = this.toLong() * 1024L
+
+val Number.MB: Long
+    get() = this.KB * 1024L
+
+val Number.GB: Long
+    get() = this.MB * 1024L
+
+val Number.dp
+    get() = dp2px(this.toFloat())
+
+/*converts sp value into px*/
+val Number.sp
+    get() = sp2px(this.toFloat())
+
+@Deprecated(
+    "Use 'Number.dp' instead",
+    ReplaceWith("Number.dp"),
+    level = DeprecationLevel.WARNING
+)
 fun dp2px(dp: Float): Int {
-    return AppManager.context.dp2px(dp)
-}
-
-fun sp2px(dp: Float): Int {
-    return AppManager.context.sp2px(dp)
-}
-
-private fun Context.dp2px(dp: Float): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, dp,
-        resources.displayMetrics
+        Resources.getSystem().displayMetrics
     ).roundToInt()
 }
 
-private fun Context.sp2px(dp: Float): Int {
+@Deprecated(
+    "Use 'Number.sp' instead",
+    ReplaceWith("Number.sp"),
+    level = DeprecationLevel.WARNING
+)
+fun sp2px(dp: Float): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_SP, dp,
-        resources.displayMetrics
+        Resources.getSystem().displayMetrics
     ).roundToInt()
 }
 
