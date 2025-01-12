@@ -13,98 +13,103 @@ import es.dmoral.toasty.Toasty
  */
 
 fun Context.toastError(
-    msg: String,
+    msg: String?,
     @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
+    if (msg.isNullOrBlank()) return
     Toasty.error(applicationContext, msg, duration, withIcon).show()
 }
 
 fun Context.toastSuccess(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
+    if (msg.isNullOrBlank()) return
     Toasty.success(applicationContext, msg, duration, withIcon).show()
 }
 
 fun Context.toastInfo(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
+    if (msg.isNullOrBlank()) return
     Toasty.info(applicationContext, msg, duration, withIcon).show()
 }
 
 fun Context.toastWarning(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
+    if (msg.isNullOrBlank()) return
     Toasty.warning(applicationContext, msg, duration, withIcon).show()
 }
 
-fun Context.toastNormal(msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT) {
+fun Context.toastNormal(msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT) {
+    if (msg.isNullOrBlank()) return
     Toasty.normal(applicationContext, msg, duration).show()
 }
 
 fun Fragment.toastError(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.error(requireContext().applicationContext, msg, duration, withIcon).show()
+    requireContext().applicationContext.toastError(msg, duration, withIcon)
 }
 
 fun Fragment.toastSuccess(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.success(requireContext().applicationContext, msg, duration, withIcon).show()
+    requireContext().applicationContext.toastSuccess(msg, duration, withIcon)
 }
 
 fun Fragment.toastInfo(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.info(requireContext().applicationContext, msg, duration, withIcon).show()
+    requireContext().applicationContext.toastInfo(msg, duration, withIcon)
 }
 
 fun Fragment.toastWarning(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.warning(requireContext().applicationContext, msg, duration, withIcon).show()
+    requireContext().applicationContext.toastWarning(msg, duration, withIcon)
 }
 
-fun Fragment.toastNormal(msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT) {
-    Toasty.normal(requireContext().applicationContext, msg, duration).show()
+fun Fragment.toastNormal(msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT) {
+    requireContext().applicationContext.toastNormal(msg, duration)
 }
 
 fun Dialog.toastError(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.error(context.applicationContext, msg, duration, withIcon).show()
+    context.applicationContext.toastError(msg, duration, withIcon)
 }
 
 fun Dialog.toastSuccess(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.success(context.applicationContext, msg, duration, withIcon).show()
+    context.applicationContext.toastSuccess(msg, duration, withIcon)
 }
 
 fun Dialog.toastInfo(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.info(context.applicationContext, msg, duration, withIcon).show()
+    context.applicationContext.toastInfo(msg, duration, withIcon)
 }
 
 fun Dialog.toastWarning(
-    msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
+    msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT,
     withIcon: Boolean = true
 ) {
-    Toasty.warning(context.applicationContext, msg, duration, withIcon).show()
+    context.applicationContext.toastWarning(msg, duration, withIcon)
 }
 
-fun Dialog.toastNormal(msg: String, @ToastDuration duration: Int = Toast.LENGTH_SHORT) {
-    Toasty.normal(context.applicationContext, msg, duration).show()
+fun Dialog.toastNormal(msg: String?, @ToastDuration duration: Int = Toast.LENGTH_SHORT) {
+    context.applicationContext.toastNormal(msg, duration)
 }
