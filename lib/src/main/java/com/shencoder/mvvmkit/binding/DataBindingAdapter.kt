@@ -27,8 +27,8 @@ import com.drake.statelayout.StateLayout
 import com.drake.statelayout.Status
 import com.shencoder.mvvmkit.ext.dp
 import com.shencoder.mvvmkit.util.ImageUtils.loadImage
-import jp.wasabeef.glide.transformations.BlurTransformation
-import jp.wasabeef.glide.transformations.GrayscaleTransformation
+import jp.wasabeef.transformers.glide.BlurTransformation
+import jp.wasabeef.transformers.glide.GrayscaleTransformation
 
 
 /**
@@ -89,7 +89,7 @@ object DataBindingAdapter {
                     transformations.add(GrayscaleTransformation())
                 }
                 if (isBlur) {
-                    transformations.add(BlurTransformation())
+                    transformations.add(BlurTransformation(context))
                 }
                 if (isCircle) {
                     transformations.add(CircleCrop())

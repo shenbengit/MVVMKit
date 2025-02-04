@@ -137,7 +137,7 @@ object AppUtils {
     @JvmStatic
     fun getAppVersionName(): String {
         val packageInfo = getPackageInfo() ?: return ""
-        return packageInfo.versionName
+        return packageInfo.versionName ?: ""
     }
 
     /**
@@ -150,7 +150,7 @@ object AppUtils {
     fun getAppSignatures(): Array<Signature>? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val packageInfo = getPackageInfo(PackageManager.GET_SIGNING_CERTIFICATES) ?: return null
-            val signingInfo: SigningInfo = packageInfo.signingInfo
+            val signingInfo: SigningInfo = packageInfo.signingInfo ?: return null
             if (signingInfo.hasMultipleSigners()) {
                 signingInfo.apkContentsSigners
             } else {
