@@ -42,6 +42,7 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
     override val scope: Scope by activityScope()
 
     final override fun onCreate(savedInstanceState: Bundle?) {
+        beforeCreate()
         super.onCreate(savedInstanceState)
         beforeCreateView()
         val layoutId = getLayoutId()
@@ -64,6 +65,10 @@ abstract class BaseSupportActivity<VM : BaseViewModel<out IRepository>, VDB : Vi
         lifecycle.removeObserver(viewModel)
         _binding?.unbind()
         _binding = null
+    }
+
+    protected open fun beforeCreate() {
+
     }
 
     protected open fun beforeCreateView() {

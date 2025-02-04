@@ -66,9 +66,14 @@ abstract class BaseViewModel<REPOSITORY : IRepository>(
     val applicationContext: Application
         get() = getApplication()
 
-    open fun getString(@StringRes resId: Int): String {
+    fun getString(@StringRes resId: Int): String {
         return applicationContext.getString(resId)
     }
+
+    fun getString(@StringRes resId: Int, vararg formatArgs: Any): String {
+        return applicationContext.getString(resId, *formatArgs)
+    }
+
 
     /**
      * 显示加载dialog
